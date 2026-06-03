@@ -367,18 +367,60 @@ document.addEventListener("keydown",e=>{
 });
 
 // ── MATCH ──
-// Build pool: shorten term (strip "What is / What are / How does etc.")
-const MATCH_POOL=ALL.map((c,i)=>{
-  let term=c.q
-    .replace(/^What (is|are) /i,"")
-    .replace(/^How (is|are|does|do|did) /i,"")
-    .replace(/\?$/,"").trim();
-  if(term.length>48)term=term.slice(0,45)+"…";
-  // First sentence of answer, trimmed
-  let def=c.a.split(/(?<=\.)\s/)[0];
-  if(def.length>110)def=def.slice(0,107)+"…";
-  return{term,def,id:i};
-});
+// Hand-crafted short labels so nothing gets cut off in tiles
+const MATCH_POOL=[
+  {id:0,  term:"Theme",                          def:"The central message a poem communicates about life."},
+  {id:1,  term:"Tone",                           def:"The speaker's attitude toward the subject."},
+  {id:2,  term:"Mood",                           def:"The feeling the poem creates in the reader."},
+  {id:3,  term:"Imagery",                        def:"Language that appeals to the five senses."},
+  {id:4,  term:"Symbolism",                      def:"An object that represents something beyond its literal meaning."},
+  {id:5,  term:"Metaphor",                       def:"A direct comparison without 'like' or 'as'."},
+  {id:6,  term:"Simile",                         def:"A comparison using 'like' or 'as'."},
+  {id:7,  term:"Repetition",                     def:"Repeating words or phrases to emphasise an idea."},
+  {id:8,  term:"Sonnet",                         def:"A 14-line poem in iambic pentameter."},
+  {id:9,  term:"Haiku",                          def:"A 3-line poem: 5 / 7 / 5 syllables."},
+  {id:10, term:"Rhyme scheme",                   def:"The pattern of end rhymes, labelled with letters (e.g. ABAB)."},
+  {id:11, term:"Tone words (examples)",          def:"Angry, hopeful, bitter, nostalgic, defiant, melancholic."},
+  {id:12, term:"Analysing tone",                 def:"Find words showing the speaker's attitude; give two examples."},
+  {id:13, term:"Analysing imagery",              def:"Identify the sense targeted, quote it, explain the effect."},
+  {id:14, term:"Analysing symbolism",            def:"Find repeated objects and ask what larger concept they represent."},
+  {id:15, term:"Identifying rhyme scheme",       def:"Assign letters to end-sounds; no rhyme = free verse."},
+  {id:16, term:"Free verse",                     def:"Poetry with no fixed rhyme scheme or meter."},
+  {id:17, term:"Structure & meaning",            def:"Short lines = tension; long lines = calm or overwhelming."},
+  {id:18, term:"Caesura & enjambment",           def:"Mid-line pause shifts tone; no line-end stop builds suspense."},
+  {id:19, term:"Life on the cocoa farm",         def:"Brutal hours, no food, beatings, locked sheds — child slavery."},
+  {id:20, term:"Why the children escape",        def:"Seydou's injury is life-threatening; staying means death."},
+  {id:21, term:"Obstacles during the journey",  def:"Jungle, hunger, Seydou's wound, the pisteur, language barriers."},
+  {id:22, term:"Setting & conflict",             def:"The remote farm isolates the boys; the jungle symbolises danger."},
+  {id:23, term:"Turning points",                 def:"Seydou's injury → Khadija's plan → escape → a stranger helps."},
+  {id:24, term:"Central theme",                  def:"Freedom vs. slavery; hope and loyalty allow people to resist."},
+  {id:25, term:"Amadou's motivations",           def:"Protect Seydou at all costs; reclaim his own freedom."},
+  {id:26, term:"Amadou's traits",                def:"Protective, responsible, courageous under pressure."},
+  {id:27, term:"Amadou's arc",                   def:"Passive victim → bold leader who trusts others."},
+  {id:28, term:"Seydou's traits",                def:"Innocent, trusting, gentle, quietly resilient."},
+  {id:29, term:"Seydou's motivations",           def:"Trust his brother; hold onto hope in brutal conditions."},
+  {id:30, term:"Seydou's arc",                   def:"Injury strips innocence; becomes Amadou's emotional drive."},
+  {id:31, term:"Khadija's traits",               def:"Fierce, street-smart, guarded — desperately wants freedom."},
+  {id:32, term:"Khadija's motivations",          def:"Escape the farm; survive on her own terms."},
+  {id:33, term:"Khadija's arc",                  def:"Lone survivor → learns survival means working together."},
+  {id:34, term:"Moussa's traits",                def:"Hardened, complicit — a victim turned source of cruelty."},
+  {id:35, term:"Moussa's arc",                   def:"He doesn't change — shows what happens when hope is destroyed."},
+  {id:36, term:"Moussa's role",                  def:"Became complicit for small privileges; hope was crushed out of him."},
+  {id:37, term:"Freedom vs. Slavery (shown)",    def:"Every small act — hiding food, whispering plans — reclaims freedom."},
+  {id:38, term:"Freedom vs. Slavery (message)",  def:"Slavery exists today; freedom must be actively fought for."},
+  {id:39, term:"Hope & Survival (shown)",        def:"Amadou clings to hope of getting Seydou home."},
+  {id:40, term:"Hope & Survival (message)",      def:"Hope is an act of resistance, not passive optimism."},
+  {id:41, term:"Family & Loyalty (shown)",       def:"Amadou's love for Seydou drives every major decision."},
+  {id:42, term:"Family & Loyalty (message)",     def:"Family — biological or chosen — gives people reason to survive."},
+  {id:43, term:"Exploitation (shown)",           def:"The pisteur system and bosses' violence exploit children."},
+  {id:44, term:"Exploitation (message)",         def:"Exploitation thrives in silence; awareness is the first step."},
+  {id:45, term:"Fear & Courage (shown)",         def:"Fear is constant; courage is acting despite it."},
+  {id:46, term:"Fear & Courage (message)",       def:"Courage grows from love — ordinary children can do extraordinary things."},
+  {id:47, term:"How Sullivan creates suspense",  def:"Short sentences, withheld info, cliffhanger chapter endings."},
+  {id:48, term:"Role of hope",                   def:"Hope separates Amadou from Moussa — a deliberate, painful choice."},
+  {id:49, term:"Character who changes most",     def:"Amadou: passive → bold leader who forms alliances."},
+  {id:50, term:"Freedom & survival link",        def:"Life without freedom is a slower form of death."},
+];
 
 const ROUND_SIZE=6;
 let matchInitialised=false;
