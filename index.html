@@ -544,7 +544,7 @@
   <header class="subj-header">
     <div class="subj-eyebrow">Study Tool</div>
     <h1 class="subj-h1">Grade 9 French</h1>
-    <p class="subj-sub">Passé Composé, Hotel &amp; Restaurant Vocab · 40 cards</p>
+    <p class="subj-sub">Passé Composé, Hotel &amp; Restaurant Vocab · 57 cards</p>
   </header>
   <div class="mode-switcher">
     <button class="mode-btn active" id="fr-btn-flash" onclick="frSwitchMode('flash')">🃏 Flashcards</button>
@@ -1022,6 +1022,11 @@ const BIO_FITB_BANK=[
   {topic:"DMD & X-Linked",sentence:"In DMD, the mutated dystrophin gene produces a non-functional protein. Dystrophin normally anchors {{actin}} to the {{ECM}}, preventing muscle damage during {{contraction}}.",answers:["actin","ECM","contraction"],distractors:["myosin","nucleus","relaxation","ATP"]},
   {topic:"DMD & X-Linked",sentence:"Cystic fibrosis is {{autosomal recessive}} — both parents must contribute a {{recessive}} allele for a child to be affected. A person with one allele is an unaffected {{carrier}}.",answers:["autosomal recessive","recessive","carrier"],distractors:["X-linked dominant","dominant","affected","autosomal dominant"]},
   {topic:"DMD & X-Linked",sentence:"Huntington's disease is {{autosomal dominant}} — only {{one}} copy of the mutated allele is needed to cause the disease. Symptoms typically appear between ages {{30}} and 50.",answers:["autosomal dominant","one","30"],distractors:["autosomal recessive","two","20","X-linked"]},
+  // ── Mitosis vs Meiosis ──
+  {topic:"Mitosis vs Meiosis",sentence:"Mitosis occurs in {{somatic}} (body) cells and produces {{2}} genetically {{identical}} daughter cells with the diploid chromosome number.",answers:["somatic","2","identical"],distractors:["germline","4","different","haploid"]},
+  {topic:"Mitosis vs Meiosis",sentence:"Meiosis occurs in the {{reproductive}} organs and produces {{4}} genetically {{different}} haploid gametes (n = 23).",answers:["reproductive","4","different"],distractors:["somatic","2","identical","diploid"]},
+  {topic:"Mitosis vs Meiosis",sentence:"In Anaphase I of meiosis, {{homologous chromosomes}} separate. In Anaphase II (and in mitosis), {{sister chromatids}} separate.",answers:["homologous chromosomes","sister chromatids"],distractors:["sister chromatids","homologous chromosomes","DNA strands","alleles"]},
+  {topic:"Mitosis vs Meiosis",sentence:"Mitosis daughter cells are genetically {{identical}} to the parent cell. Meiosis daughter cells are {{unique}} due to crossing over and {{independent assortment}}.",answers:["identical","unique","independent assortment"],distractors:["different","identical","crossing over","mutation"]},
 ];
 
 // ── BIO FLASHCARD STATE ──
@@ -1546,6 +1551,15 @@ const FR_MATCH_POOL=[
   {id:30,term:"il y a deux jours",      def:"two days ago (il y a + time)"},
   {id:31,term:"la semaine dernière",    def:"last week"},
   {id:32,term:"lire → lu",             def:"to read → read (irregular past participle)"},
+  // Negation & Questions
+  {id:33,term:"Je n'ai pas fini",       def:"I didn't finish (ne...pas around the auxiliary)"},
+  {id:34,term:"Est-ce que tu as fini ?",def:"Did you finish? (est-ce que question form)"},
+  {id:35,term:"As-tu mangé ?",          def:"Did you eat? (inversion question form)"},
+  // Time Expressions
+  {id:36,term:"hier",                   def:"yesterday"},
+  {id:37,term:"avant-hier",             def:"the day before yesterday"},
+  {id:38,term:"l'année dernière",       def:"last year"},
+  {id:39,term:"il y a trois jours",     def:"three days ago (il y a + time)"},
 ];
 
 const FR_FITB_BANK=[
@@ -1561,6 +1575,19 @@ const FR_FITB_BANK=[
   {topic:"Hotel Dialogue",sentence:"'Le {{petit-déjeuner}} est {{inclus}} ?' demande le touriste. La réceptionniste répond : 'Oui, c'est {{compris}} dans le prix.'",answers:["petit-déjeuner","inclus","compris"],distractors:["dîner","exclu","séjour","chambre"]},
   {topic:"Polite Phrases",sentence:"Pour terminer une conversation polie, on dit '{{Merci}} beaucoup' et '{{Au revoir}}'.",answers:["Merci","Au revoir"],distractors:["Bonjour","S'il vous plaît","Excusez-moi","Bonne nuit"]},
   {topic:"Passé Composé Practice",sentence:"Je {{fais}} mes devoirs → J'ai {{fait}} mes devoirs. Nous {{avons}} une réunion → Nous avons {{eu}} une réunion.",answers:["fais","fait","avons","eu"],distractors:["faire","faisais","sommes","était"]},
+  // ── Negation & Questions ──
+  {topic:"Negation & Questions",sentence:"To make the passé composé negative, wrap {{ne}}...{{pas}} around the auxiliary verb. Example: Je {{n'ai}} pas mangé. (I didn't eat.)",answers:["ne","pas","n'ai"],distractors:["non","plus","ai","jamais"]},
+  {topic:"Negation & Questions",sentence:"'Il a regardé la télé.' → negative: Il {{n'a}} pas {{regardé}} la télé. The past participle {{stays}} the same.",answers:["n'a","regardé","stays"],distractors:["a","regarder","changes","ecoute"]},
+  {topic:"Negation & Questions",sentence:"To ask a yes/no question with est-ce que: {{Est-ce que}} + subject + avoir conjugated + past participle. Example: {{Est-ce que}} tu as mangé ?",answers:["Est-ce que","Est-ce que"],distractors:["Qu'est-ce que","Comment","Pourquoi","Combien"]},
+  {topic:"Negation & Questions",sentence:"To form a question by inversion, swap the subject pronoun and auxiliary with a {{hyphen}}. Example: {{As}}-tu mangé ? A-{{t}}-il fini ?",answers:["hyphen","As","t"],distractors:["comma","A","il","Est"]},
+  // ── Time Expressions ──
+  {topic:"Time Expressions",sentence:"Common time expressions with passé composé: {{hier}} (yesterday), la semaine {{dernière}} (last week), and il y a + time ({{ago}}).",answers:["hier","dernière","ago"],distractors:["demain","prochaine","before","avant"]},
+  {topic:"Time Expressions",sentence:"'I ate at a restaurant yesterday.' → J'ai {{mangé}} au restaurant {{hier}}. Hier is placed at the {{end}} or beginning of the sentence.",answers:["mangé","hier","end"],distractors:["manger","demain","middle","début"]},
+  {topic:"Time Expressions",sentence:"'Last week, we visited the Eiffel Tower.' → La semaine {{dernière}}, nous avons {{visité}} la Tour Eiffel.",answers:["dernière","visité"],distractors:["prochaine","visiter","passée","voir"]},
+  // ── Grammar Practice ──
+  {topic:"Grammar Practice – Converting",sentence:"'Tu joues au football.' → Tu as {{joué}} au football. 'Nous visitons le musée.' → Nous avons {{visité}} le musée.",answers:["joué","visité"],distractors:["jouer","visiter","jouait","visitait"]},
+  {topic:"Grammar Practice – Converting",sentence:"'Elle écoute de la musique.' → Elle a {{écouté}} de la musique. 'Vous travaillez.' → Vous avez {{travaillé}}.",answers:["écouté","travaillé"],distractors:["écouter","travailler","écoutait","travaillait"]},
+  {topic:"Grammar Practice – Converting",sentence:"'Ils font une promenade.' → Ils ont {{fait}} une promenade. 'Je mange au restaurant.' → J'ai {{mangé}} au restaurant.",answers:["fait","mangé"],distractors:["faire","manger","faisait","mangeait"]},
 ];
 
 // ── FR FLASHCARD STATE ──
