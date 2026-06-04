@@ -284,6 +284,7 @@
       <div class="sc-tags">
         <span class="sc-tag">🃏 Flashcards</span>
         <span class="sc-tag">🔗 Match</span>
+        <span class="sc-tag">✏️ Fill in the Blank</span>
       </div>
     </div>
     <div class="subject-card bio" onclick="showPage('bio')">
@@ -409,7 +410,7 @@
 ══════════════════════════════════════ -->
 <div class="page page-bio" id="page-bio">
   <header class="subj-header">
-    <div class="subj-eyebrow">Study Tool · Final Exam</div>
+    <div class="subj-eyebrow">Study Tool</div>
     <h1 class="subj-h1">Grade 9 Biology</h1>
     <p class="subj-sub">Genetics: Gene Expression, Cell Division &amp; Inheritance &middot; 59 cards</p>
   </header>
@@ -711,14 +712,7 @@ function engShowMatchComplete(){
   document.getElementById("eng-match-complete").classList.add("show");
 }
 
-// ── ENG KEYBOARD ──
-document.addEventListener("keydown",e=>{
-  if(document.getElementById("page-eng").classList.contains("visible")&&document.getElementById("eng-screen-flash").classList.contains("visible")){
-    if(e.key==="ArrowRight")engGo(1);
-    else if(e.key==="ArrowLeft")engGo(-1);
-    else if(e.key===" "){e.preventDefault();engFlip();}
-  }
-});
+
 
 // ══════════════════════════════════════════════════════
 // BIOLOGY DATA
@@ -1013,7 +1007,7 @@ function engLoadFitbQuestion(){
   });
   const bankWords=[...q.answers,...q.distractors].sort(()=>Math.random()-0.5);
   document.getElementById("eng-fitb-chips").innerHTML=bankWords.map(w=>
-    `<div class="fitb-chip" data-word="${w}" onclick="engFitbChipClick(this)">${w}</div>`
+    `<div class="fitb-chip" tabindex="0" data-word="${w}" onclick="engFitbChipClick(this)">${w}</div>`
   ).join("");
 }
 function engSyncChipUsed(){
@@ -1093,18 +1087,33 @@ function engShowFitbComplete(){
   document.getElementById("eng-fitb-complete").classList.add("show");
 }
 
-// ── ENG KEYBOARD (add fitb support) ──
+// ── ENG KEYBOARD ──
 document.addEventListener("keydown",e=>{
   const engPageVisible=document.getElementById("page-eng").classList.contains("visible");
   if(!engPageVisible)return;
   if(document.getElementById("eng-screen-flash").classList.contains("visible")){
-    if(e.key==="ArrowRight")engGo(1);
-    else if(e.key==="ArrowLeft")engGo(-1);
+    if(e.key==="ArrowRight"){e.preventDefault();engGo(1);}
+    else if(e.key==="ArrowLeft"){e.preventDefault();engGo(-1);}
     else if(e.key===" "){e.preventDefault();engFlip();}
   }
   if(document.getElementById("eng-screen-fitb").classList.contains("visible")){
-    if(document.activeElement&&document.activeElement.classList.contains("fitb-blank"))return;
-    if(e.key==="Enter"&&engFitbAnswered){e.preventDefault();engFitbNext();}
+    const inBlank=document.activeElement&&document.activeElement.classList.contains("fitb-blank");
+    if(inBlank)return;
+    if(e.key==="Enter"&&engFitbAnswered){e.preventDefault();engFitbNext();return;}
+    // Arrow key navigation through word bank chips
+    const chips=[...document.querySelectorAll('#eng-fitb-chips .fitb-chip:not(.used)')];
+    if(!chips.length)return;
+    if(e.key==="ArrowRight"||e.key==="ArrowLeft"){
+      e.preventDefault();
+      const cur=chips.findIndex(c=>c===document.activeElement);
+      let next;
+      if(e.key==="ArrowRight")next=chips[(cur+1)%chips.length];
+      else next=chips[(cur-1+chips.length)%chips.length];
+      next.focus();engFitbChipFocus=chips.indexOf(next);
+    }
+    if(e.key===" "&&document.activeElement&&document.activeElement.classList.contains("fitb-chip")){
+      e.preventDefault();engFitbChipClick(document.activeElement);
+    }
   }
 });
 const BIO_FITB_ROUND_SIZE=10;
@@ -1154,7 +1163,7 @@ function bioLoadFitbQuestion(){
   });
   const bankWords=[...q.answers,...q.distractors].sort(()=>Math.random()-0.5);
   document.getElementById("bio-fitb-chips").innerHTML=bankWords.map(w=>
-    `<div class="fitb-chip" data-word="${w}" onclick="bioFitbChipClick(this)">${w}</div>`
+    `<div class="fitb-chip" tabindex="0" data-word="${w}" onclick="bioFitbChipClick(this)">${w}</div>`
   ).join("");
 }
 function bioSyncChipUsed(){
@@ -1239,13 +1248,28 @@ document.addEventListener("keydown",e=>{
   const bioPageVisible=document.getElementById("page-bio").classList.contains("visible");
   if(!bioPageVisible)return;
   if(document.getElementById("bio-screen-flash").classList.contains("visible")){
-    if(e.key==="ArrowRight")bioGo(1);
-    else if(e.key==="ArrowLeft")bioGo(-1);
+    if(e.key==="ArrowRight"){e.preventDefault();bioGo(1);}
+    else if(e.key==="ArrowLeft"){e.preventDefault();bioGo(-1);}
     else if(e.key===" "){e.preventDefault();bioFlip();}
   }
   if(document.getElementById("bio-screen-fitb").classList.contains("visible")){
-    if(document.activeElement&&document.activeElement.classList.contains("fitb-blank"))return;
-    if(e.key==="Enter"&&bioFitbAnswered){e.preventDefault();bioFitbNext();}
+    const inBlank=document.activeElement&&document.activeElement.classList.contains("fitb-blank");
+    if(inBlank)return;
+    if(e.key==="Enter"&&bioFitbAnswered){e.preventDefault();bioFitbNext();return;}
+    // Arrow key navigation through word bank chips
+    const chips=[...document.querySelectorAll('#bio-fitb-chips .fitb-chip:not(.used)')];
+    if(!chips.length)return;
+    if(e.key==="ArrowRight"||e.key==="ArrowLeft"){
+      e.preventDefault();
+      const cur=chips.findIndex(c=>c===document.activeElement);
+      let next;
+      if(e.key==="ArrowRight")next=chips[(cur+1)%chips.length];
+      else next=chips[(cur-1+chips.length)%chips.length];
+      next.focus();bioFitbChipFocus=chips.indexOf(next);
+    }
+    if(e.key===" "&&document.activeElement&&document.activeElement.classList.contains("fitb-chip")){
+      e.preventDefault();bioFitbChipClick(document.activeElement);
+    }
   }
 });
 </script>
