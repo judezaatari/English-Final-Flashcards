@@ -1,41 +1,127 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Grade 9 English — Flashcards</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📖</text></svg>" />
+  <title>Grade 9 Study Hub</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+    /* ── SHARED TOKENS ── */
     :root{
-      --bg:#0f0e17;--surface:#1a1927;--surface2:#22203a;
-      --accent:#e8b86d;--accent2:#a78bfa;--green:#6ee7b7;--red:#f87171;
-      --text:#f0eee8;--muted:#8e8ba0;--border:rgba(255,255,255,0.08);--radius:18px
+      --bg:#0b0d14;--surface:#131825;--surface2:#1a2235;
+      --text:#f0eee8;--muted:#8e9ab0;--border:rgba(255,255,255,0.08);--radius:18px;
+      /* subject accents – overridden per subject */
+      --accent:#ffffff;--accent2:#ffffff;--green:#6ee7b7;--red:#f87171;--amber:#fbbf24;
     }
+
     body{
       background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;
       min-height:100vh;display:flex;flex-direction:column;align-items:center;
-      padding:2rem 1.25rem 4rem
     }
     body::before{
       content:'';position:fixed;inset:0;
       background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
-      pointer-events:none;z-index:0
+      pointer-events:none;z-index:0;
     }
-    .wrapper{width:100%;max-width:720px;position:relative;z-index:1}
-    header{text-align:center;margin-bottom:2rem;animation:fadeDown 0.6s ease both}
+
+    /* ── TOP NAV ── */
+    .topnav{
+      width:100%;position:sticky;top:0;z-index:100;
+      background:rgba(11,13,20,0.85);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+      border-bottom:1px solid var(--border);
+      display:flex;align-items:center;justify-content:space-between;
+      padding:0 2rem;height:56px;
+    }
+    .topnav-brand{
+      font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;
+      background:linear-gradient(90deg,#f0eee8 0%,#8e9ab0 100%);
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+      cursor:pointer;user-select:none;white-space:nowrap;
+    }
+    .topnav-tabs{display:flex;gap:4px}
+    .topnav-tab{
+      font-size:13px;font-weight:500;padding:6px 18px;border-radius:999px;
+      border:1px solid transparent;background:transparent;color:var(--muted);
+      cursor:pointer;transition:all 0.18s;font-family:'DM Sans',sans-serif;
+      display:flex;align-items:center;gap:6px;
+    }
+    .topnav-tab:hover{color:var(--text);background:rgba(255,255,255,0.05)}
+    .topnav-tab.active-eng{background:linear-gradient(135deg,rgba(167,139,250,0.25),rgba(232,184,109,0.15));border-color:rgba(167,139,250,0.4);color:#e8b86d}
+    .topnav-tab.active-bio{background:linear-gradient(135deg,rgba(110,231,183,0.2),rgba(96,165,250,0.15));border-color:rgba(96,165,250,0.4);color:#6ee7b7}
+
+    /* ── PAGES ── */
+    .page{display:none;width:100%;max-width:720px;padding:2rem 1.25rem 4rem;position:relative;z-index:1}
+    .page.visible{display:block;animation:fadeUp 0.4s ease both}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
     @keyframes fadeDown{from{opacity:0;transform:translateY(-16px)}to{opacity:1;transform:none}}
-    header .eyebrow{font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);font-weight:500;margin-bottom:0.5rem}
-    header h1{
-      font-family:'Playfair Display',serif;font-size:clamp(1.8rem,5vw,2.6rem);font-weight:700;line-height:1.2;
-      background:linear-gradient(135deg,var(--text) 40%,var(--accent) 100%);
-      -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text
+
+    /* ── HOME PAGE ── */
+    .home-hero{text-align:center;padding:3rem 0 2rem;animation:fadeDown 0.6s ease both}
+    .home-eyebrow{font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);font-weight:500;margin-bottom:0.75rem}
+    .home-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,6vw,3.2rem);font-weight:700;line-height:1.15;
+      background:linear-gradient(135deg,var(--text) 30%,#8e9ab0 100%);
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+      margin-bottom:0.6rem}
+    .home-sub{font-size:14px;color:var(--muted);line-height:1.6}
+    .subject-cards{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:2.5rem;animation:fadeDown 0.6s 0.15s ease both}
+    @media(max-width:500px){.subject-cards{grid-template-columns:1fr}}
+    .subject-card{
+      border-radius:var(--radius);border:1px solid var(--border);
+      padding:1.75rem 1.5rem;cursor:pointer;transition:all 0.22s;
+      text-align:left;position:relative;overflow:hidden;
     }
-    header .subtitle{font-size:13px;color:var(--muted);margin-top:0.4rem}
-    .mode-switcher{display:flex;gap:8px;justify-content:center;margin-bottom:2rem;animation:fadeDown 0.6s 0.1s ease both}
+    .subject-card::before{
+      content:'';position:absolute;inset:0;opacity:0;transition:opacity 0.3s;
+      background:radial-gradient(ellipse at 30% 30%, rgba(255,255,255,0.06), transparent 70%);
+    }
+    .subject-card:hover::before{opacity:1}
+    .subject-card:hover{transform:translateY(-3px);border-color:rgba(255,255,255,0.18)}
+    .subject-card.eng{background:linear-gradient(145deg,#1a1635,#1e1a30)}
+    .subject-card.bio{background:linear-gradient(145deg,#0d1f2a,#0e2233)}
+    .subject-card:hover.eng{box-shadow:0 16px 48px rgba(167,139,250,0.15)}
+    .subject-card:hover.bio{box-shadow:0 16px 48px rgba(96,165,250,0.12)}
+    .sc-icon{font-size:2rem;margin-bottom:0.75rem}
+    .sc-title{font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:700;margin-bottom:0.3rem}
+    .sc-title.eng{color:#e8b86d}
+    .sc-title.bio{color:#6ee7b7}
+    .sc-desc{font-size:12.5px;color:var(--muted);line-height:1.55;margin-bottom:1rem}
+    .sc-tags{display:flex;flex-wrap:wrap;gap:6px}
+    .sc-tag{font-size:10.5px;font-weight:500;padding:3px 10px;border-radius:999px;border:1px solid rgba(255,255,255,0.1);color:var(--muted)}
+    .sc-arrow{position:absolute;top:1.25rem;right:1.25rem;font-size:1rem;color:rgba(255,255,255,0.2);transition:all 0.2s}
+    .subject-card:hover .sc-arrow{color:rgba(255,255,255,0.5);transform:translate(2px,-2px)}
+    .home-footer{text-align:center;margin-top:3rem;font-size:12px;color:rgba(255,255,255,0.18);animation:fadeDown 0.6s 0.3s ease both}
+
+    /* ── SUBJECT HEADER ── */
+    .subj-header{text-align:center;margin-bottom:2rem;animation:fadeDown 0.5s ease both}
+    .subj-eyebrow{font-size:11px;letter-spacing:0.2em;text-transform:uppercase;font-weight:500;margin-bottom:0.5rem}
+    .subj-h1{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,5vw,2.6rem);font-weight:700;line-height:1.2;color:var(--text)}
+    .subj-sub{font-size:13px;color:var(--muted);margin-top:0.4rem}
+
+    /* English colour overrides */
+    .page-eng{--accent:#e8b86d;--accent2:#a78bfa}
+    .page-eng .subj-eyebrow{color:var(--accent)}
+    .page-eng .subj-h1{background:linear-gradient(135deg,var(--text) 40%,var(--accent) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .page-eng .mode-btn.active{background:linear-gradient(135deg,#a78bfa,#7c5cbf)}
+    .page-eng .tab.active{background:#a78bfa;border-color:#a78bfa;color:#fff}
+    .page-eng .card-face.back{background:linear-gradient(145deg,#1e1b3a,#251f40)}
+
+    /* Bio colour overrides */
+    .page-bio{--accent:#6ee7b7;--accent2:#60a5fa}
+    .page-bio .subj-eyebrow{color:var(--accent)}
+    .page-bio .subj-h1{background:linear-gradient(135deg,var(--text) 40%,var(--accent) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .page-bio .mode-btn.active{background:linear-gradient(135deg,#60a5fa,#2563eb)}
+    .page-bio .tab.active{background:#60a5fa;border-color:#60a5fa;color:#fff}
+    .page-bio .card-face.back{background:linear-gradient(145deg,#0d1f2e,#0e2233)}
+
+    /* ── MODE SWITCHER ── */
+    .mode-switcher{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:2rem;animation:fadeDown 0.6s 0.1s ease both}
     .mode-btn{
       font-size:13px;font-weight:500;padding:8px 22px;border-radius:999px;
       border:1px solid var(--border);background:var(--surface2);color:var(--muted);
@@ -43,245 +129,415 @@
       display:flex;align-items:center;gap:6px
     }
     .mode-btn:hover{color:var(--text);border-color:var(--accent2)}
-    .mode-btn.active{background:linear-gradient(135deg,var(--accent2),#7c5cbf);border-color:transparent;color:#fff}
+    .mode-btn.active{border-color:transparent;color:#fff}
+
+    /* ── SCREEN VISIBILITY ── */
     .screen{display:none}
     .screen.visible{display:block;animation:fadeUp 0.4s ease both}
-    @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+
+    /* ── FLASHCARDS ── */
     .toolbar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:1.2rem}
     .tabs{display:flex;gap:6px;flex-wrap:wrap}
-    .tab{
-      font-size:12px;font-weight:500;padding:5px 14px;border-radius:999px;
-      border:1px solid var(--border);background:transparent;color:var(--muted);
-      cursor:pointer;transition:all 0.18s;font-family:'DM Sans',sans-serif
-    }
+    .tab{font-size:12px;font-weight:500;padding:5px 14px;border-radius:999px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;transition:all 0.18s;font-family:'DM Sans',sans-serif}
     .tab:hover{border-color:var(--accent2);color:var(--text)}
-    .tab.active{background:var(--accent2);border-color:var(--accent2);color:#fff}
     .right-tools{display:flex;align-items:center;gap:10px}
-    .shuffle-btn{
-      font-size:13px;font-weight:500;padding:6px 16px;border-radius:999px;
-      border:1px solid var(--border);background:var(--surface2);color:var(--text);
-      cursor:pointer;transition:all 0.18s;font-family:'DM Sans',sans-serif
-    }
+    .shuffle-btn{font-size:13px;font-weight:500;padding:6px 16px;border-radius:999px;border:1px solid var(--border);background:var(--surface2);color:var(--text);cursor:pointer;transition:all 0.18s;font-family:'DM Sans',sans-serif}
     .shuffle-btn:hover{background:var(--surface);border-color:var(--accent);color:var(--accent)}
     .progress{font-size:13px;color:var(--muted);white-space:nowrap;font-variant-numeric:tabular-nums}
     .card-area{perspective:1400px;margin-bottom:1rem}
-    .card-wrap{
-      width:100%;min-height:240px;position:relative;
-      transform-style:preserve-3d;transition:transform 0.55s cubic-bezier(.4,0,.2,1);
-      cursor:pointer;user-select:none
-    }
+    .card-wrap{width:100%;min-height:240px;position:relative;transform-style:preserve-3d;transition:transform 0.55s cubic-bezier(.4,0,.2,1);cursor:pointer;user-select:none}
     .card-wrap.flipped{transform:rotateY(180deg)}
-    .card-face{
-      position:absolute;inset:0;min-height:240px;
-      backface-visibility:hidden;-webkit-backface-visibility:hidden;
-      border-radius:var(--radius);border:1px solid var(--border);
-      display:flex;flex-direction:column;align-items:center;justify-content:center;
-      padding:2.25rem 2.75rem;text-align:center
-    }
-    .card-face.front{
-      background:linear-gradient(145deg,var(--surface),var(--surface2));
-      box-shadow:0 20px 60px rgba(0,0,0,0.5),0 1px 0 rgba(255,255,255,0.06) inset
-    }
-    .card-face.back{
-      transform:rotateY(180deg);
-      background:linear-gradient(145deg,#1e1b3a,#251f40);
-      box-shadow:0 20px 60px rgba(0,0,0,0.5),0 1px 0 rgba(255,255,255,0.06) inset
-    }
+    .card-face{position:absolute;inset:0;min-height:240px;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:var(--radius);border:1px solid var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2.25rem 2.75rem;text-align:center}
+    .card-face.front{background:linear-gradient(145deg,var(--surface),var(--surface2));box-shadow:0 20px 60px rgba(0,0,0,0.5),0 1px 0 rgba(255,255,255,0.06) inset}
+    .card-face.back{transform:rotateY(180deg);box-shadow:0 20px 60px rgba(0,0,0,0.5),0 1px 0 rgba(255,255,255,0.06) inset}
     .card-label{font-size:10px;font-weight:500;letter-spacing:0.18em;text-transform:uppercase;color:var(--accent);margin-bottom:1.1rem}
     .card-face.back .card-label{color:var(--accent2)}
     .card-category{font-size:11px;color:var(--muted);margin-top:1.25rem;background:rgba(255,255,255,0.05);padding:3px 10px;border-radius:999px}
     .card-q{font-family:'Playfair Display',serif;font-size:clamp(1rem,3vw,1.25rem);font-weight:500;color:var(--text);line-height:1.5}
-    .card-a{font-size:14.5px;color:var(--text);line-height:1.75}
+    .card-a{font-size:14px;color:var(--text);line-height:1.75;text-align:left}
     .flip-hint{font-size:11px;color:var(--muted);text-align:center;margin-bottom:1.25rem;letter-spacing:0.05em}
     .flip-hint span{opacity:0.5}
     .nav-row{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:1.25rem}
-    .nav-btn{
-      display:flex;align-items:center;gap:6px;font-size:14px;font-weight:500;
-      padding:9px 24px;border-radius:999px;border:1px solid var(--border);
-      background:var(--surface2);color:var(--text);cursor:pointer;
-      transition:all 0.18s;font-family:'DM Sans',sans-serif
-    }
+    .nav-btn{display:flex;align-items:center;gap:6px;font-size:14px;font-weight:500;padding:9px 24px;border-radius:999px;border:1px solid var(--border);background:var(--surface2);color:var(--text);cursor:pointer;transition:all 0.18s;font-family:'DM Sans',sans-serif}
     .nav-btn:hover:not(:disabled){background:var(--surface);border-color:var(--accent2)}
     .nav-btn:disabled{opacity:0.3;cursor:default}
     .dot-row{display:flex;gap:5px;justify-content:center;flex-wrap:wrap;padding:0 1rem}
     .dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,0.1);transition:all 0.2s;cursor:pointer;flex-shrink:0}
     .dot:hover{background:rgba(255,255,255,0.3)}
     .dot.seen{background:rgba(255,255,255,0.25)}
-    .dot.current{background:var(--accent);width:20px;border-radius:4px}
-    .done-banner{
-      display:none;text-align:center;padding:1.5rem;
-      background:linear-gradient(135deg,rgba(232,184,109,0.12),rgba(167,139,250,0.12));
-      border:1px solid rgba(232,184,109,0.25);border-radius:var(--radius);margin-top:1.5rem
-    }
+    .done-banner{display:none;text-align:center;padding:1.5rem;border-radius:var(--radius);margin-top:1.5rem}
     .done-banner.show{display:block;animation:fadeUp 0.4s ease both}
-    .done-banner h3{font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--accent)}
+    .done-banner h3{font-family:'Playfair Display',serif;font-size:1.2rem}
     .done-banner p{font-size:13px;color:var(--muted);margin-top:0.4rem}
+    .page-eng .dot.current{background:var(--accent);width:20px;border-radius:4px}
+    .page-bio .dot.current{background:var(--accent);width:20px;border-radius:4px}
+    .page-eng .done-banner{background:linear-gradient(135deg,rgba(232,184,109,0.12),rgba(167,139,250,0.12));border:1px solid rgba(232,184,109,0.25)}
+    .page-eng .done-banner h3{color:var(--accent)}
+    .page-bio .done-banner{background:linear-gradient(135deg,rgba(110,231,183,0.12),rgba(96,165,250,0.12));border:1px solid rgba(110,231,183,0.25)}
+    .page-bio .done-banner h3{color:var(--accent)}
 
     /* ── MATCH ── */
     .match-header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:0.75rem}
     .match-meta{font-size:13px;color:var(--muted)}
     .match-meta strong{color:var(--text)}
-    .match-new-btn{
-      font-size:13px;font-weight:500;padding:7px 18px;border-radius:999px;
-      border:1px solid var(--border);background:var(--surface2);color:var(--text);
-      cursor:pointer;transition:all 0.18s;font-family:'DM Sans',sans-serif
-    }
+    .match-new-btn,.fitb-new-btn{font-size:13px;font-weight:500;padding:7px 18px;border-radius:999px;border:1px solid var(--border);background:var(--surface2);color:var(--text);cursor:pointer;transition:all 0.18s;font-family:'DM Sans',sans-serif}
     .match-new-btn:hover{border-color:var(--accent);color:var(--accent)}
-
+    .fitb-new-btn:hover{border-color:var(--amber);color:var(--amber)}
     .match-instructions{font-size:12px;color:var(--muted);margin-bottom:1.25rem;text-align:center}
-
-    /* Two-column layout: terms | definitions */
     .match-columns{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1.5rem}
     .match-col-header{font-size:10px;font-weight:500;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);text-align:center;margin-bottom:6px;padding:0 4px}
-
-    .match-tile{
-      min-height:68px;border-radius:12px;border:1px solid var(--border);
-      background:var(--surface2);display:flex;align-items:center;justify-content:center;
-      padding:0.65rem 0.85rem;text-align:center;font-size:12.5px;line-height:1.4;color:var(--text);
-      cursor:pointer;transition:transform 0.15s,border-color 0.15s,background 0.15s,opacity 0.35s;
-      user-select:none;position:relative
-    }
-    .match-tile:hover:not(.matched):not(.wrong){
-      border-color:var(--accent2);background:var(--surface);transform:translateY(-2px)
-    }
-    .match-tile.selected{
-      border-color:var(--accent2);background:rgba(167,139,250,0.18);
-      transform:translateY(-2px);
-      box-shadow:0 0 0 3px rgba(167,139,250,0.25)
-    }
-    .match-tile.matched{
-      border-color:var(--green);background:rgba(110,231,183,0.08);
-      color:rgba(110,231,183,0.7);cursor:default;
-      transform:none;pointer-events:none
-    }
-    .match-tile.matched::after{
-      content:'✓';position:absolute;top:5px;right:8px;
-      font-size:10px;color:var(--green);opacity:0.7
-    }
-    .match-tile.wrong{
-      border-color:var(--red);background:rgba(248,113,113,0.15);
-      animation:shake 0.35s ease
-    }
-    .match-tile.term{
-      font-weight:500;font-family:'Playfair Display',serif;font-size:13px
-    }
+    .match-tile{min-height:68px;border-radius:12px;border:1px solid var(--border);background:var(--surface2);display:flex;align-items:center;justify-content:center;padding:0.65rem 0.85rem;text-align:center;font-size:12.5px;line-height:1.4;color:var(--text);cursor:pointer;transition:transform 0.15s,border-color 0.15s,background 0.15s,opacity 0.35s;user-select:none;position:relative}
+    .match-tile:hover:not(.matched):not(.wrong){border-color:var(--accent2);background:var(--surface);transform:translateY(-2px)}
+    .match-tile.matched{border-color:var(--green);background:rgba(110,231,183,0.08);color:rgba(110,231,183,0.7);cursor:default;transform:none;pointer-events:none}
+    .match-tile.matched::after{content:'✓';position:absolute;top:5px;right:8px;font-size:10px;color:var(--green);opacity:0.7}
+    .match-tile.wrong{border-color:var(--red);background:rgba(248,113,113,0.15);animation:shake 0.35s ease}
+    .match-tile.term{font-weight:500;font-family:'Playfair Display',serif;font-size:13px}
+    .page-eng .match-tile.selected{border-color:#a78bfa;background:rgba(167,139,250,0.18);transform:translateY(-2px);box-shadow:0 0 0 3px rgba(167,139,250,0.25)}
+    .page-bio .match-tile.selected{border-color:#60a5fa;background:rgba(96,165,250,0.18);transform:translateY(-2px);box-shadow:0 0 0 3px rgba(96,165,250,0.25)}
     @keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}60%{transform:translateX(6px)}}
-
-    /* Pair flash animation */
     @keyframes pairFlash{0%{background:rgba(110,231,183,0.35)}100%{background:rgba(110,231,183,0.08)}}
     .match-tile.just-matched{animation:pairFlash 0.5s ease forwards}
-
-    .match-complete{
-      display:none;text-align:center;padding:2rem 1.5rem;
-      background:linear-gradient(135deg,rgba(110,231,183,0.1),rgba(167,139,250,0.1));
-      border:1px solid rgba(110,231,183,0.25);border-radius:var(--radius)
-    }
+    .match-complete{display:none;text-align:center;padding:2rem 1.5rem;background:linear-gradient(135deg,rgba(110,231,183,0.1),rgba(96,165,250,0.1));border:1px solid rgba(110,231,183,0.25);border-radius:var(--radius)}
     .match-complete.show{display:block;animation:fadeUp 0.4s ease both}
     .match-complete h3{font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--green);margin-bottom:0.5rem}
     .match-complete p{font-size:13px;color:var(--muted);margin-bottom:1.25rem}
-    .match-complete button{
-      font-size:14px;font-weight:500;padding:10px 28px;border-radius:999px;
-      border:none;background:linear-gradient(135deg,var(--green),#34d399);
-      color:#0f0e17;cursor:pointer;font-family:'DM Sans',sans-serif
-    }
-
+    .match-complete button,.fitb-complete button{font-size:14px;font-weight:500;padding:10px 28px;border-radius:999px;border:none;background:linear-gradient(135deg,var(--green),#34d399);color:#0b0f1a;cursor:pointer;font-family:'DM Sans',sans-serif}
     .stars{font-size:1.6rem;margin-bottom:0.5rem}
+
+    /* ── FITB ── */
+    .fitb-header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:0.75rem}
+    .fitb-meta{font-size:13px;color:var(--muted)}
+    .fitb-meta strong{color:var(--text)}
+    .fitb-card{background:linear-gradient(145deg,var(--surface),var(--surface2));border:1px solid var(--border);border-radius:var(--radius);padding:2rem 2.25rem;margin-bottom:1.25rem;box-shadow:0 20px 60px rgba(0,0,0,0.4)}
+    .fitb-topic{font-size:10px;font-weight:500;letter-spacing:0.18em;text-transform:uppercase;color:var(--amber);margin-bottom:1rem}
+    .fitb-sentence{font-family:'Playfair Display',serif;font-size:clamp(1rem,2.8vw,1.2rem);line-height:1.8;color:var(--text);margin-bottom:1.5rem}
+    .fitb-blank{display:inline-block;min-width:120px;border:none;border-bottom:2px solid var(--accent2);background:transparent;color:var(--accent2);font-family:'DM Sans',sans-serif;font-size:clamp(0.95rem,2.5vw,1.1rem);font-weight:500;text-align:center;padding:2px 8px;outline:none;transition:border-color 0.2s,color 0.2s;vertical-align:baseline;caret-color:var(--accent2)}
+    .fitb-blank:focus{border-color:var(--accent);color:var(--text)}
+    .fitb-blank.correct{border-color:var(--green)!important;color:var(--green)!important;background:rgba(110,231,183,0.08);border-radius:6px 6px 0 0}
+    .fitb-blank.wrong-ans{border-color:var(--red)!important;color:var(--red)!important;background:rgba(248,113,113,0.08);border-radius:6px 6px 0 0;animation:shake 0.35s ease}
+    .fitb-blank:disabled{cursor:default}
+    .fitb-word-bank{margin-bottom:1.5rem}
+    .fitb-bank-label{font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);font-weight:500;margin-bottom:0.6rem}
+    .fitb-bank-label kbd{font-size:9px;font-family:'DM Sans',sans-serif;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:4px;padding:1px 5px;color:var(--text);letter-spacing:0;text-transform:none;vertical-align:middle}
+    .fitb-chips{display:flex;flex-wrap:wrap;gap:8px}
+    .fitb-chip{font-size:12.5px;font-weight:500;padding:5px 14px;border-radius:999px;border:1px solid var(--border);background:var(--surface2);color:var(--text);cursor:pointer;transition:all 0.18s;font-family:'DM Sans',sans-serif;user-select:none}
+    .fitb-chip:hover:not(.used){border-color:var(--amber);color:var(--amber);transform:translateY(-1px)}
+    .fitb-chip.used{opacity:0.25;cursor:default;text-decoration:line-through}
+    .fitb-chip.kb-focus{border-color:var(--amber);background:rgba(251,191,36,0.18);color:var(--amber);transform:translateY(-2px);box-shadow:0 0 0 3px rgba(251,191,36,0.2)}
+    .fitb-feedback{min-height:28px;font-size:13px;color:var(--muted);margin-bottom:1rem;text-align:center;transition:all 0.2s}
+    .fitb-feedback.ok{color:var(--green)}
+    .fitb-feedback.err{color:var(--red)}
+    .fitb-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:1rem}
+    .fitb-btn{font-size:13px;font-weight:500;padding:8px 22px;border-radius:999px;border:1px solid var(--border);background:var(--surface2);color:var(--text);cursor:pointer;transition:all 0.18s;font-family:'DM Sans',sans-serif}
+    .fitb-btn:hover{background:var(--surface);border-color:var(--accent2)}
+    .fitb-btn.primary{border-color:transparent;color:#fff}
+    .page-bio .fitb-btn.primary{background:linear-gradient(135deg,#60a5fa,#2563eb)}
+    .page-eng .fitb-btn.primary{background:linear-gradient(135deg,#a78bfa,#7c5cbf)}
+    .fitb-btn:disabled{opacity:0.35;cursor:default}
+    .fitb-progress-row{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-bottom:1.5rem}
+    .fitb-pip{width:28px;height:5px;border-radius:3px;background:rgba(255,255,255,0.1);transition:background 0.3s}
+    .fitb-pip.done-correct{background:var(--green)}
+    .fitb-pip.done-wrong{background:var(--red)}
+    .fitb-pip.active{background:var(--amber);width:36px}
+    .fitb-complete{display:none;text-align:center;padding:2rem 1.5rem;background:linear-gradient(135deg,rgba(251,191,36,0.08),rgba(96,165,250,0.1));border:1px solid rgba(251,191,36,0.25);border-radius:var(--radius)}
+    .fitb-complete.show{display:block;animation:fadeUp 0.4s ease both}
+    .fitb-complete h3{font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--amber);margin-bottom:0.5rem}
+    .fitb-complete p{font-size:13px;color:var(--muted);margin-bottom:1.25rem}
 
     @media(max-width:480px){
       .card-face{padding:1.75rem 1.5rem}
       .toolbar{flex-direction:column;align-items:flex-start}
       .match-tile{font-size:11.5px;min-height:60px;padding:0.5rem 0.65rem}
+      .fitb-card{padding:1.5rem 1.25rem}
+      .topnav{padding:0 1rem}
+      .topnav-brand{font-size:0.95rem}
+      .subject-cards{grid-template-columns:1fr}
     }
   </style>
 </head>
 <body>
-<div class="wrapper">
-  <header>
-    <div class="eyebrow">Study Tool</div>
-    <h1>Grade 9 English</h1>
-    <p class="subtitle">The Bitter Side of Sweet &amp; Poetry Terms &middot; 51 cards</p>
+
+<!-- TOP NAV -->
+<nav class="topnav">
+  <div class="topnav-brand" onclick="showPage('home')">📚 Grade 9 Study Hub</div>
+  <div class="topnav-tabs">
+    <button class="topnav-tab" id="nav-eng" onclick="showPage('eng')">📖 English</button>
+    <button class="topnav-tab" id="nav-bio" onclick="showPage('bio')">🧬 Biology</button>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════
+     HOME PAGE
+══════════════════════════════════════ -->
+<div class="page visible" id="page-home">
+  <div class="home-hero">
+    <div class="home-eyebrow">Final Exam Prep · Grade 9</div>
+    <h1 class="home-title">Your Study Hub</h1>
+    <p class="home-sub">Pick a subject to get started. Flashcards, matching, and fill-in-the-blank — all in one place.</p>
+  </div>
+  <div class="subject-cards">
+    <div class="subject-card eng" onclick="showPage('eng')">
+      <span class="sc-arrow">↗</span>
+      <div class="sc-icon">📖</div>
+      <div class="sc-title eng">English</div>
+      <div class="sc-desc">The Bitter Side of Sweet, poetry terms, character analysis, and themes. 51 cards.</div>
+      <div class="sc-tags">
+        <span class="sc-tag">🃏 Flashcards</span>
+        <span class="sc-tag">🔗 Match</span>
+      </div>
+    </div>
+    <div class="subject-card bio" onclick="showPage('bio')">
+      <span class="sc-arrow">↗</span>
+      <div class="sc-icon">🧬</div>
+      <div class="sc-title bio">Biology</div>
+      <div class="sc-desc">Gene expression, cell division, genetics, pedigrees, and inheritance. 59 cards.</div>
+      <div class="sc-tags">
+        <span class="sc-tag">🃏 Flashcards</span>
+        <span class="sc-tag">🔗 Match</span>
+        <span class="sc-tag">✏️ Fill in the Blank</span>
+      </div>
+    </div>
+  </div>
+  <div class="home-footer">Use the tabs above or click a card to jump into a subject.</div>
+</div>
+
+<!-- ══════════════════════════════════════
+     ENGLISH PAGE
+══════════════════════════════════════ -->
+<div class="page page-eng" id="page-eng">
+  <header class="subj-header">
+    <div class="subj-eyebrow">Study Tool</div>
+    <h1 class="subj-h1">Grade 9 English</h1>
+    <p class="subj-sub">The Bitter Side of Sweet &amp; Poetry Terms &middot; 51 cards</p>
   </header>
   <div class="mode-switcher">
-    <button class="mode-btn active" id="btn-flash" onclick="switchMode('flash')">🃏 Flashcards</button>
-    <button class="mode-btn" id="btn-match" onclick="switchMode('match')">🔗 Match</button>
+    <button class="mode-btn active" id="eng-btn-flash" onclick="engSwitchMode('flash')">🃏 Flashcards</button>
+    <button class="mode-btn" id="eng-btn-match" onclick="engSwitchMode('match')">🔗 Match</button>
+    <button class="mode-btn" id="eng-btn-fitb" onclick="engSwitchMode('fitb')">✏️ Fill in the Blank</button>
   </div>
 
-  <!-- FLASHCARD SCREEN -->
-  <div class="screen visible" id="screen-flash">
+  <!-- ENG FLASHCARD SCREEN -->
+  <div class="screen visible" id="eng-screen-flash">
     <div class="toolbar">
-      <div class="tabs" id="tabs"></div>
+      <div class="tabs" id="eng-tabs"></div>
       <div class="right-tools">
-        <button class="shuffle-btn" onclick="shuffle()">⇄ Shuffle</button>
-        <span class="progress" id="prog"></span>
+        <button class="shuffle-btn" onclick="engShuffle()">⇄ Shuffle</button>
+        <span class="progress" id="eng-prog"></span>
       </div>
     </div>
     <div class="card-area">
-      <div class="card-wrap" id="card" onclick="flip()">
+      <div class="card-wrap" id="eng-card" onclick="engFlip()">
         <div class="card-face front">
           <div class="card-label">Question</div>
-          <div class="card-q" id="q-text"></div>
-          <div class="card-category" id="q-cat"></div>
+          <div class="card-q" id="eng-q-text"></div>
+          <div class="card-category" id="eng-q-cat"></div>
         </div>
         <div class="card-face back">
           <div class="card-label">Answer</div>
-          <div class="card-a" id="a-text"></div>
+          <div class="card-a" id="eng-a-text"></div>
         </div>
       </div>
     </div>
     <p class="flip-hint">Tap to flip <span>&middot;</span> &larr; &rarr; arrow keys <span>&middot;</span> Space to flip</p>
     <div class="nav-row">
-      <button class="nav-btn" id="prev-btn" onclick="go(-1)">&larr; Prev</button>
-      <button class="nav-btn" id="next-btn" onclick="go(1)">Next &rarr;</button>
+      <button class="nav-btn" id="eng-prev-btn" onclick="engGo(-1)">&larr; Prev</button>
+      <button class="nav-btn" id="eng-next-btn" onclick="engGo(1)">Next &rarr;</button>
     </div>
-    <div class="dot-row" id="dots"></div>
-    <div class="done-banner" id="done">
+    <div class="dot-row" id="eng-dots"></div>
+    <div class="done-banner" id="eng-done">
       <h3>🎉 Deck complete!</h3>
       <p>You've gone through all the cards. Shuffle for another round.</p>
     </div>
   </div>
 
-  <!-- MATCH SCREEN -->
-  <div class="screen" id="screen-match">
+  <!-- ENG MATCH SCREEN -->
+  <div class="screen" id="eng-screen-match">
     <div class="match-header">
-      <div class="match-meta">
-        <strong id="match-score">0</strong> / <strong id="match-total">6</strong> matched
-        &nbsp;&middot;&nbsp; <strong id="match-mistakes">0</strong> mistakes
-      </div>
-      <button class="match-new-btn" onclick="newMatchRound()">↻ New round</button>
+      <div class="match-meta"><strong id="eng-match-score">0</strong> / <strong id="eng-match-total">6</strong> matched &nbsp;&middot;&nbsp; <strong id="eng-match-mistakes">0</strong> mistakes</div>
+      <button class="match-new-btn" onclick="engNewMatchRound()">↻ New round</button>
     </div>
     <p class="match-instructions">Pick a term, then its matching definition</p>
     <div class="match-columns">
       <div>
         <div class="match-col-header">Terms</div>
-        <div id="match-terms" style="display:flex;flex-direction:column;gap:8px"></div>
+        <div id="eng-match-terms" style="display:flex;flex-direction:column;gap:8px"></div>
       </div>
       <div>
         <div class="match-col-header">Definitions</div>
-        <div id="match-defs" style="display:flex;flex-direction:column;gap:8px"></div>
+        <div id="eng-match-defs" style="display:flex;flex-direction:column;gap:8px"></div>
       </div>
     </div>
-    <div class="match-complete" id="match-complete">
-      <div class="stars" id="match-stars"></div>
+    <div class="match-complete" id="eng-match-complete">
+      <div class="stars" id="eng-match-stars"></div>
       <h3>All matched!</h3>
-      <p id="match-result-text"></p>
-      <button onclick="newMatchRound()">Play again</button>
+      <p id="eng-match-result-text"></p>
+      <button onclick="engNewMatchRound()">Play again</button>
     </div>
   </div>
-</div>
+
+  <!-- ENG FITB SCREEN -->
+  <div class="screen" id="eng-screen-fitb">
+    <div class="fitb-header">
+      <div class="fitb-meta">Question <strong id="eng-fitb-idx">1</strong> of <strong id="eng-fitb-total">10</strong> &nbsp;&middot;&nbsp; <strong id="eng-fitb-correct">0</strong> correct</div>
+      <button class="fitb-new-btn" onclick="engNewFitbRound()">↻ New round</button>
+    </div>
+    <div class="fitb-progress-row" id="eng-fitb-pips"></div>
+    <div class="fitb-card" id="eng-fitb-card">
+      <div class="fitb-topic" id="eng-fitb-topic"></div>
+      <div class="fitb-sentence" id="eng-fitb-sentence"></div>
+    </div>
+    <div class="fitb-word-bank" id="eng-fitb-bank-wrap">
+      <div class="fitb-bank-label">Word bank · <kbd>← →</kbd> navigate &nbsp;·&nbsp; <kbd>Space</kbd> select &nbsp;·&nbsp; <kbd>Tab</kbd> switch blank &nbsp;·&nbsp; <kbd>Enter</kbd> next question</div>
+      <div class="fitb-chips" id="eng-fitb-chips"></div>
+    </div>
+    <div class="fitb-feedback" id="eng-fitb-feedback"></div>
+    <div class="fitb-actions">
+      <button class="fitb-btn" id="eng-fitb-hint-btn" onclick="engFitbHint()">💡 Hint</button>
+      <button class="fitb-btn primary" id="eng-fitb-next-btn" onclick="engFitbNext()" disabled>Next →</button>
+    </div>
+    <div class="fitb-complete" id="eng-fitb-complete">
+      <div class="stars" id="eng-fitb-stars"></div>
+      <h3>Round complete!</h3>
+      <p id="eng-fitb-result-text"></p>
+      <button onclick="engNewFitbRound()">Play again</button>
+    </div>
+  </div>
+</div><!-- /page-eng -->
+
+<!-- ══════════════════════════════════════
+     BIOLOGY PAGE
+══════════════════════════════════════ -->
+<div class="page page-bio" id="page-bio">
+  <header class="subj-header">
+    <div class="subj-eyebrow">Study Tool · Final Exam</div>
+    <h1 class="subj-h1">Grade 9 Biology</h1>
+    <p class="subj-sub">Genetics: Gene Expression, Cell Division &amp; Inheritance &middot; 59 cards</p>
+  </header>
+  <div class="mode-switcher">
+    <button class="mode-btn active" id="bio-btn-flash" onclick="bioSwitchMode('flash')">🃏 Flashcards</button>
+    <button class="mode-btn" id="bio-btn-match" onclick="bioSwitchMode('match')">🔗 Match</button>
+    <button class="mode-btn" id="bio-btn-fitb" onclick="bioSwitchMode('fitb')">✏️ Fill in the Blank</button>
+  </div>
+
+  <!-- BIO FLASHCARD SCREEN -->
+  <div class="screen visible" id="bio-screen-flash">
+    <div class="toolbar">
+      <div class="tabs" id="bio-tabs"></div>
+      <div class="right-tools">
+        <button class="shuffle-btn" onclick="bioShuffle()">⇄ Shuffle</button>
+        <span class="progress" id="bio-prog"></span>
+      </div>
+    </div>
+    <div class="card-area">
+      <div class="card-wrap" id="bio-card" onclick="bioFlip()">
+        <div class="card-face front">
+          <div class="card-label">Question</div>
+          <div class="card-q" id="bio-q-text"></div>
+          <div class="card-category" id="bio-q-cat"></div>
+        </div>
+        <div class="card-face back">
+          <div class="card-label">Answer</div>
+          <div class="card-a" id="bio-a-text"></div>
+        </div>
+      </div>
+    </div>
+    <p class="flip-hint">Tap to flip <span>&middot;</span> &larr; &rarr; arrow keys <span>&middot;</span> Space to flip</p>
+    <div class="nav-row">
+      <button class="nav-btn" id="bio-prev-btn" onclick="bioGo(-1)">&larr; Prev</button>
+      <button class="nav-btn" id="bio-next-btn" onclick="bioGo(1)">Next &rarr;</button>
+    </div>
+    <div class="dot-row" id="bio-dots"></div>
+    <div class="done-banner" id="bio-done">
+      <h3>🎉 Deck complete!</h3>
+      <p>You've gone through all the cards. Shuffle for another round.</p>
+    </div>
+  </div>
+
+  <!-- BIO MATCH SCREEN -->
+  <div class="screen" id="bio-screen-match">
+    <div class="match-header">
+      <div class="match-meta"><strong id="bio-match-score">0</strong> / <strong id="bio-match-total">6</strong> matched &nbsp;&middot;&nbsp; <strong id="bio-match-mistakes">0</strong> mistakes</div>
+      <button class="match-new-btn" onclick="bioNewMatchRound()">↻ New round</button>
+    </div>
+    <p class="match-instructions">Pick a term, then its matching definition</p>
+    <div class="match-columns">
+      <div>
+        <div class="match-col-header">Terms</div>
+        <div id="bio-match-terms" style="display:flex;flex-direction:column;gap:8px"></div>
+      </div>
+      <div>
+        <div class="match-col-header">Definitions</div>
+        <div id="bio-match-defs" style="display:flex;flex-direction:column;gap:8px"></div>
+      </div>
+    </div>
+    <div class="match-complete" id="bio-match-complete">
+      <div class="stars" id="bio-match-stars"></div>
+      <h3>All matched!</h3>
+      <p id="bio-match-result-text"></p>
+      <button onclick="bioNewMatchRound()">Play again</button>
+    </div>
+  </div>
+
+  <!-- BIO FITB SCREEN -->
+  <div class="screen" id="bio-screen-fitb">
+    <div class="fitb-header">
+      <div class="fitb-meta">Question <strong id="bio-fitb-idx">1</strong> of <strong id="bio-fitb-total">10</strong> &nbsp;&middot;&nbsp; <strong id="bio-fitb-correct">0</strong> correct</div>
+      <button class="fitb-new-btn" onclick="bioNewFitbRound()">↻ New round</button>
+    </div>
+    <div class="fitb-progress-row" id="bio-fitb-pips"></div>
+    <div class="fitb-card" id="bio-fitb-card">
+      <div class="fitb-topic" id="bio-fitb-topic"></div>
+      <div class="fitb-sentence" id="bio-fitb-sentence"></div>
+    </div>
+    <div class="fitb-word-bank" id="bio-fitb-bank-wrap">
+      <div class="fitb-bank-label">Word bank · <kbd>← →</kbd> navigate &nbsp;·&nbsp; <kbd>Space</kbd> select &nbsp;·&nbsp; <kbd>Tab</kbd> switch blank &nbsp;·&nbsp; <kbd>Enter</kbd> next question</div>
+      <div class="fitb-chips" id="bio-fitb-chips"></div>
+    </div>
+    <div class="fitb-feedback" id="bio-fitb-feedback"></div>
+    <div class="fitb-actions">
+      <button class="fitb-btn" id="bio-fitb-hint-btn" onclick="bioFitbHint()">💡 Hint</button>
+      <button class="fitb-btn primary" id="bio-fitb-next-btn" onclick="bioFitbNext()" disabled>Next →</button>
+    </div>
+    <div class="fitb-complete" id="bio-fitb-complete">
+      <div class="stars" id="bio-fitb-stars"></div>
+      <h3>Round complete!</h3>
+      <p id="bio-fitb-result-text"></p>
+      <button onclick="bioNewFitbRound()">Play again</button>
+    </div>
+  </div>
+</div><!-- /page-bio -->
 
 <script>
-const ALL=[
-  {cat:"Poetry Terms",q:"What is theme?",a:"The central message or big idea the poem communicates about life or the world."},
-  {cat:"Poetry Terms",q:"What is tone?",a:"The speaker's attitude toward the subject — how the speaker feels (e.g. angry, hopeful, bitter)."},
-  {cat:"Poetry Terms",q:"What is mood?",a:"The feeling the poem creates in the reader — different from tone, which belongs to the speaker."},
-  {cat:"Poetry Terms",q:"What is imagery?",a:"Language that appeals to the five senses — sight, sound, smell, taste, touch — to create vivid mental pictures."},
-  {cat:"Poetry Terms",q:"What is symbolism?",a:"When an object, person, or idea represents something beyond its literal meaning (e.g. a chain = slavery)."},
-  {cat:"Poetry Terms",q:"What is a metaphor?",a:"A direct comparison between two unlike things without 'like' or 'as' (e.g. 'The farm was a prison')."},
-  {cat:"Poetry Terms",q:"What is a simile?",a:"A comparison using 'like' or 'as' (e.g. 'He moved like a shadow through the trees')."},
-  {cat:"Poetry Terms",q:"What is repetition?",a:"Repeating words, phrases, or lines to emphasize an idea, create rhythm, or reinforce emotion."},
-  {cat:"Poetry Terms",q:"What is a sonnet?",a:"A 14-line poem in iambic pentameter. Shakespearean: ABAB CDCD EFEF GG. Petrarchan: octave + sestet. Often explores love, time, or beauty."},
-  {cat:"Poetry Terms",q:"What is a haiku?",a:"A 3-line Japanese poem: 5 syllables, 7 syllables, 5 syllables. Focuses on a single moment in nature."},
-  {cat:"Poetry Terms",q:"What is a rhyme scheme?",a:"The pattern of end rhymes in a poem, labelled with letters (e.g. ABAB means lines 1 & 3 rhyme, lines 2 & 4 rhyme)."},
+// ══════════════════════════════════════════════════════
+// PAGE NAVIGATION
+// ══════════════════════════════════════════════════════
+function showPage(name){
+  ['home','eng','bio'].forEach(p=>{
+    document.getElementById('page-'+p).classList.toggle('visible',p===name);
+  });
+  ['eng','bio'].forEach(n=>{
+    const el=document.getElementById('nav-'+n);
+    el.className='topnav-tab'+(name===n?' active-'+n:'');
+  });
+  // Scroll to top
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ══════════════════════════════════════════════════════
+// ENGLISH DATA
+// ══════════════════════════════════════════════════════
+const ENG_ALL=[
+  {cat:"Poetry Terms",q:"What is a theme in a poem?",a:"The central message or insight about life that a poem communicates. It goes beyond the topic: not just 'war' but what the poet says about war."},
+  {cat:"Poetry Terms",q:"What is tone in a poem?",a:"The speaker's attitude toward the subject. It is expressed through word choice (diction). E.g. angry, hopeful, nostalgic, bitter, ironic."},
+  {cat:"Poetry Terms",q:"What is mood in a poem?",a:"The feeling the poem creates in the reader — distinct from tone (the speaker's attitude). Mood is the atmosphere the reader experiences."},
+  {cat:"Poetry Terms",q:"What is imagery?",a:"Language that appeals to one or more of the five senses, helping the reader picture, hear, feel, smell, or taste something described in the poem."},
+  {cat:"Poetry Terms",q:"What is symbolism?",a:"When an object, person, or place represents something beyond its literal meaning. E.g. a broken chain symbolises freedom; a storm symbolises chaos."},
+  {cat:"Poetry Terms",q:"What is a metaphor?",a:"A direct comparison stating one thing IS another, without using 'like' or 'as'. E.g. 'Life is a journey.'"},
+  {cat:"Poetry Terms",q:"What is a simile?",a:"A comparison using 'like' or 'as'. E.g. 'Her voice was like music.' It creates vivid images while keeping a slight distance from the comparison."},
+  {cat:"Poetry Terms",q:"What is personification?",a:"Giving human qualities to non-human things. E.g. 'The wind whispered through the trees.'"},
+  {cat:"Poetry Terms",q:"What is repetition in poetry?",a:"Repeating words, phrases, or lines for emphasis. It can reinforce an emotion, create rhythm, or highlight a key idea."},
+  {cat:"Poetry Terms",q:"What is a sonnet?",a:"A 14-line poem typically written in iambic pentameter. Shakespearean sonnets follow an ABAB CDCD EFEF GG rhyme scheme."},
+  {cat:"Poetry Terms",q:"What is a haiku?",a:"A 3-line Japanese poem with a 5-7-5 syllable structure. Often captures a moment in nature or a sudden insight."},
   {cat:"Poetry Terms",q:"What are some examples of tone words?",a:"Angry, hopeful, bitter, sorrowful, nostalgic, defiant, celebratory, ironic, melancholic, anxious, reverent, detached."},
   {cat:"Poetry Terms",q:"How do you analyse tone in a poem?",a:"Ask how the speaker feels. Find specific words revealing that attitude. Justify your tone word with at least two examples from the text."},
   {cat:"Poetry Terms",q:"How do you analyse imagery in a poem?",a:"Find sensory details. Identify which sense is targeted, quote the image, then explain the feeling or idea it creates for the reader."},
@@ -324,51 +580,7 @@ const ALL=[
   {cat:"Final Review",q:"How are freedom and survival connected in the novel?",a:"True survival is impossible without freedom. The boys are alive on the farm but destroyed inside. A life without freedom is a slower form of death."},
 ];
 
-// ── FLASHCARDS ──
-function switchMode(mode){
-  document.getElementById("screen-flash").classList.toggle("visible",mode==="flash");
-  document.getElementById("screen-match").classList.toggle("visible",mode==="match");
-  document.getElementById("btn-flash").classList.toggle("active",mode==="flash");
-  document.getElementById("btn-match").classList.toggle("active",mode==="match");
-  if(mode==="match"&&!matchInitialised)newMatchRound();
-}
-const CATS=["All",...[...new Set(ALL.map(c=>c.cat))]];
-let active="All",deck=[],idx=0,flipped=false;
-function getDeck(){return active==="All"?[...ALL]:ALL.filter(c=>c.cat===active);}
-function shuffle(){deck.sort(()=>Math.random()-0.5);idx=0;flipped=false;document.getElementById("card").classList.remove("flipped");render();}
-function setActive(cat){active=cat;deck=getDeck();idx=0;flipped=false;document.getElementById("card").classList.remove("flipped");renderTabs();render();}
-function flip(){flipped=!flipped;document.getElementById("card").classList.toggle("flipped",flipped);render();}
-function go(dir){const n=idx+dir;if(n<0||n>=deck.length)return;idx=n;flipped=false;document.getElementById("card").classList.remove("flipped");render();}
-function renderTabs(){
-  document.getElementById("tabs").innerHTML=CATS.map(c=>
-    `<button class="tab${c===active?" active":""}" onclick="setActive('${c}')">${c}</button>`
-  ).join("");
-}
-function render(){
-  const c=deck[idx];
-  document.getElementById("q-text").textContent=c.q;
-  document.getElementById("q-cat").textContent=c.cat;
-  document.getElementById("a-text").textContent=c.a;
-  document.getElementById("prog").textContent=`${idx+1} / ${deck.length}`;
-  document.getElementById("prev-btn").disabled=idx===0;
-  document.getElementById("next-btn").disabled=idx===deck.length-1;
-  document.getElementById("dots").innerHTML=deck.map((_,i)=>
-    `<div class="dot${i<idx?" seen":i===idx?" current":""}" onclick="jumpTo(${i})" title="Card ${i+1}"></div>`
-  ).join("");
-  document.getElementById("done").classList.toggle("show",idx===deck.length-1&&flipped);
-}
-function jumpTo(i){idx=i;flipped=false;document.getElementById("card").classList.remove("flipped");render();}
-deck=getDeck();renderTabs();render();
-document.addEventListener("keydown",e=>{
-  if(!document.getElementById("screen-flash").classList.contains("visible"))return;
-  if(e.key==="ArrowRight")go(1);
-  else if(e.key==="ArrowLeft")go(-1);
-  else if(e.key===" "){e.preventDefault();flip();}
-});
-
-// ── MATCH ──
-// Hand-crafted short labels so nothing gets cut off in tiles
-const MATCH_POOL=[
+const ENG_MATCH_POOL=[
   {id:0,  term:"Theme",                          def:"The central message a poem communicates about life."},
   {id:1,  term:"Tone",                           def:"The speaker's attitude toward the subject."},
   {id:2,  term:"Mood",                           def:"The feeling the poem creates in the reader."},
@@ -422,95 +634,620 @@ const MATCH_POOL=[
   {id:50, term:"Freedom & survival link",        def:"Life without freedom is a slower form of death."},
 ];
 
-const ROUND_SIZE=6;
-let matchInitialised=false;
-let matchSelected=null,matchMatched=0,matchMistakes=0,matchPairs=[],matchLocked=false;
-
-function newMatchRound(){
-  matchInitialised=true;
-  matchSelected=null;matchMatched=0;matchMistakes=0;matchLocked=false;
-  matchPairs=[...MATCH_POOL].sort(()=>Math.random()-0.5).slice(0,ROUND_SIZE);
-  document.getElementById("match-complete").classList.remove("show");
-  document.getElementById("match-score").textContent="0";
-  document.getElementById("match-total").textContent=ROUND_SIZE;
-  document.getElementById("match-mistakes").textContent="0";
-
-  // Shuffle definitions independently so they don't line up
-  const shuffledDefs=[...matchPairs].sort(()=>Math.random()-0.5);
-
-  const termsEl=document.getElementById("match-terms");
-  const defsEl=document.getElementById("match-defs");
-
-  termsEl.innerHTML=matchPairs.map(p=>
-    `<div class="match-tile term" data-id="${p.id}" data-type="term" onclick="matchClick(this)">${p.term}</div>`
-  ).join("");
-
-  defsEl.innerHTML=shuffledDefs.map(p=>
-    `<div class="match-tile" data-id="${p.id}" data-type="def" onclick="matchClick(this)">${p.def}</div>`
+// ── ENG FLASHCARD STATE ──
+const ENG_CATS=["All",...[...new Set(ENG_ALL.map(c=>c.cat))]];
+let engActive="All",engDeck=[],engIdx=0,engFlipped=false;
+function engGetDeck(){return engActive==="All"?[...ENG_ALL]:ENG_ALL.filter(c=>c.cat===engActive);}
+function engShuffle(){engDeck.sort(()=>Math.random()-0.5);engIdx=0;engFlipped=false;document.getElementById("eng-card").classList.remove("flipped");engRender();}
+function engSetActive(cat){engActive=cat;engDeck=engGetDeck();engIdx=0;engFlipped=false;document.getElementById("eng-card").classList.remove("flipped");engRenderTabs();engRender();}
+function engFlip(){engFlipped=!engFlipped;document.getElementById("eng-card").classList.toggle("flipped",engFlipped);engRender();}
+function engGo(dir){const n=engIdx+dir;if(n<0||n>=engDeck.length)return;engIdx=n;engFlipped=false;document.getElementById("eng-card").classList.remove("flipped");engRender();}
+function engRenderTabs(){
+  document.getElementById("eng-tabs").innerHTML=ENG_CATS.map(c=>
+    `<button class="tab${c===engActive?" active":""}" onclick="engSetActive('${c.replace(/'/g,"\\'")}')"> ${c}</button>`
   ).join("");
 }
+function engRender(){
+  const c=engDeck[engIdx];
+  document.getElementById("eng-q-text").textContent=c.q;
+  document.getElementById("eng-q-cat").textContent=c.cat;
+  document.getElementById("eng-a-text").textContent=c.a;
+  document.getElementById("eng-prog").textContent=`${engIdx+1} / ${engDeck.length}`;
+  document.getElementById("eng-prev-btn").disabled=engIdx===0;
+  document.getElementById("eng-next-btn").disabled=engIdx===engDeck.length-1;
+  document.getElementById("eng-dots").innerHTML=engDeck.map((_,i)=>
+    `<div class="dot${i<engIdx?" seen":i===engIdx?" current":""}" onclick="engJumpTo(${i})" title="Card ${i+1}"></div>`
+  ).join("");
+  document.getElementById("eng-done").classList.toggle("show",engIdx===engDeck.length-1&&engFlipped);
+}
+function engJumpTo(i){engIdx=i;engFlipped=false;document.getElementById("eng-card").classList.remove("flipped");engRender();}
+engDeck=engGetDeck();engRenderTabs();engRender();
 
-function matchClick(el){
-  if(matchLocked)return;
-  if(el.classList.contains("matched"))return;
+// ── ENG MODE SWITCHER ──
+function engSwitchMode(mode){
+  ['flash','match','fitb'].forEach(m=>{
+    document.getElementById('eng-screen-'+m).classList.toggle('visible',m===mode);
+    document.getElementById('eng-btn-'+m).classList.toggle('active',m===mode);
+  });
+  if(mode==='match'&&!engMatchInitialised)engNewMatchRound();
+  if(mode==='fitb'&&!engFitbInitialised)engNewFitbRound();
+}
 
-  // If clicking the already-selected tile, deselect
-  if(matchSelected===el){
-    el.classList.remove("selected");
-    matchSelected=null;
-    return;
-  }
-
-  // If clicking same type as selected, swap selection
-  if(matchSelected&&matchSelected.dataset.type===el.dataset.type){
-    matchSelected.classList.remove("selected");
-    matchSelected=el;
-    el.classList.add("selected");
-    return;
-  }
-
-  // No selection yet
-  if(!matchSelected){
-    matchSelected=el;
-    el.classList.add("selected");
-    return;
-  }
-
-  // We have two different types — check match
-  const a=matchSelected,b=el;
-  a.classList.remove("selected");
-  matchSelected=null;
-
+// ── ENG MATCH STATE ──
+const ENG_ROUND_SIZE=6;
+let engMatchInitialised=false,engMatchSelected=null,engMatchMatched=0,engMatchMistakes=0,engMatchPairs=[],engMatchLocked=false;
+function engNewMatchRound(){
+  engMatchInitialised=true;engMatchSelected=null;engMatchMatched=0;engMatchMistakes=0;engMatchLocked=false;
+  engMatchPairs=[...ENG_MATCH_POOL].sort(()=>Math.random()-0.5).slice(0,ENG_ROUND_SIZE);
+  document.getElementById("eng-match-complete").classList.remove("show");
+  document.getElementById("eng-match-score").textContent="0";
+  document.getElementById("eng-match-total").textContent=ENG_ROUND_SIZE;
+  document.getElementById("eng-match-mistakes").textContent="0";
+  const shuffledDefs=[...engMatchPairs].sort(()=>Math.random()-0.5);
+  document.getElementById("eng-match-terms").innerHTML=engMatchPairs.map(p=>`<div class="match-tile term" data-id="${p.id}" data-type="term" onclick="engMatchClick(this)">${p.term}</div>`).join("");
+  document.getElementById("eng-match-defs").innerHTML=shuffledDefs.map(p=>`<div class="match-tile" data-id="${p.id}" data-type="def" onclick="engMatchClick(this)">${p.def}</div>`).join("");
+}
+function engMatchClick(el){
+  if(engMatchLocked||el.classList.contains("matched"))return;
+  if(engMatchSelected===el){el.classList.remove("selected");engMatchSelected=null;return;}
+  if(engMatchSelected&&engMatchSelected.dataset.type===el.dataset.type){engMatchSelected.classList.remove("selected");engMatchSelected=el;el.classList.add("selected");return;}
+  if(!engMatchSelected){engMatchSelected=el;el.classList.add("selected");return;}
+  const a=engMatchSelected,b=el;a.classList.remove("selected");engMatchSelected=null;
   if(a.dataset.id===b.dataset.id){
-    // Correct!
-    a.classList.add("matched","just-matched");
-    b.classList.add("matched","just-matched");
+    a.classList.add("matched","just-matched");b.classList.add("matched","just-matched");
     setTimeout(()=>{a.classList.remove("just-matched");b.classList.remove("just-matched");},500);
-    matchMatched++;
-    document.getElementById("match-score").textContent=matchMatched;
-    if(matchMatched===ROUND_SIZE){
-      setTimeout(()=>showMatchComplete(),500);
-    }
+    engMatchMatched++;document.getElementById("eng-match-score").textContent=engMatchMatched;
+    if(engMatchMatched===ENG_ROUND_SIZE)setTimeout(()=>engShowMatchComplete(),500);
   }else{
-    // Wrong — flash red, brief lock
-    matchLocked=true;
-    a.classList.add("wrong");b.classList.add("wrong");
-    matchMistakes++;
-    document.getElementById("match-mistakes").textContent=matchMistakes;
-    setTimeout(()=>{
-      a.classList.remove("wrong");b.classList.remove("wrong");
-      matchLocked=false;
-    },600);
+    engMatchLocked=true;a.classList.add("wrong");b.classList.add("wrong");
+    engMatchMistakes++;document.getElementById("eng-match-mistakes").textContent=engMatchMistakes;
+    setTimeout(()=>{a.classList.remove("wrong");b.classList.remove("wrong");engMatchLocked=false;},600);
   }
 }
-
-function showMatchComplete(){
-  const stars=matchMistakes===0?"🌟🌟🌟":matchMistakes<=2?"⭐⭐⭐":matchMistakes<=5?"⭐⭐":"⭐";
-  document.getElementById("match-stars").textContent=stars;
-  document.getElementById("match-result-text").textContent=
-    `${ROUND_SIZE} pairs matched with ${matchMistakes} mistake${matchMistakes!==1?"s":""}. ${matchMistakes===0?"Perfect round!":matchMistakes<=2?"Great job!":"Keep practising!"}`;
-  document.getElementById("match-complete").classList.add("show");
+function engShowMatchComplete(){
+  const stars=engMatchMistakes===0?"🌟🌟🌟":engMatchMistakes<=2?"⭐⭐⭐":engMatchMistakes<=5?"⭐⭐":"⭐";
+  document.getElementById("eng-match-stars").textContent=stars;
+  document.getElementById("eng-match-result-text").textContent=`${ENG_ROUND_SIZE} pairs matched with ${engMatchMistakes} mistake${engMatchMistakes!==1?"s":""}. ${engMatchMistakes===0?"Perfect round!":engMatchMistakes<=2?"Great job!":"Keep practising!"}`;
+  document.getElementById("eng-match-complete").classList.add("show");
 }
+
+// ── ENG KEYBOARD ──
+document.addEventListener("keydown",e=>{
+  if(document.getElementById("page-eng").classList.contains("visible")&&document.getElementById("eng-screen-flash").classList.contains("visible")){
+    if(e.key==="ArrowRight")engGo(1);
+    else if(e.key==="ArrowLeft")engGo(-1);
+    else if(e.key===" "){e.preventDefault();engFlip();}
+  }
+});
+
+// ══════════════════════════════════════════════════════
+// BIOLOGY DATA
+// ══════════════════════════════════════════════════════
+const BIO_ALL=[
+  {cat:"Gene Expression",q:"What is gene expression (protein synthesis)?",a:"The process by which the information encoded in a gene (DNA) is used to make a protein. It has two main stages: transcription and translation."},
+  {cat:"Gene Expression",q:"Where does transcription take place?",a:"In the nucleus. During transcription, the DNA is used as a template to make a complementary strand of mRNA."},
+  {cat:"Gene Expression",q:"What is mRNA and what is its role?",a:"Messenger RNA (mRNA) is a copy of the gene's code made during transcription. It carries the genetic instructions out of the nucleus to the ribosome."},
+  {cat:"Gene Expression",q:"Where does translation take place?",a:"In the cytoplasm, on a ribosome. The ribosome reads the mRNA codons (3-letter words) and assembles a chain of amino acids."},
+  {cat:"Gene Expression",q:"What is the role of tRNA during translation?",a:"Transfer RNA (tRNA) brings the correct amino acid to the ribosome. Each tRNA has a 3-letter anticodon that matches a codon on the mRNA."},
+  {cat:"Gene Expression",q:"What are the base pairing rules for DNA and RNA?",a:"DNA: A pairs with T, C pairs with G. In transcription, RNA uses U instead of T — so DNA A pairs with RNA U, DNA T pairs with RNA A."},
+  {cat:"Gene Expression",q:"Summarise the full path from gene to protein.",a:"DNA (in nucleus) → transcription → mRNA → leaves nucleus → ribosome → translation (tRNA brings amino acids) → amino acid chain folds → functional protein."},
+  {cat:"Gene Expression",q:"Why must a protein fold after translation?",a:"A protein's 3D shape is determined by its amino acid sequence. Proper folding is essential for the protein to function correctly."},
+  {cat:"Gene Expression",q:"What is the role of the ribosome in gene expression?",a:"The ribosome reads the mRNA sequence codon by codon, coordinates the tRNA matching, and links amino acids together to build the protein chain."},
+  {cat:"Mutations",q:"What is a genetic mutation?",a:"A change in the sequence of bases (nucleotides) in DNA. Mutations can alter the mRNA, change amino acids, and produce a non-functional protein."},
+  {cat:"Mutations",q:"What are the three types of mutation?",a:"1. Substitution – one base is swapped for another. 2. Insertion – one or more bases are added. 3. Deletion – one or more bases are removed."},
+  {cat:"Mutations",q:"Why are insertion and deletion mutations often more harmful than substitution?",a:"They cause a frameshift — all codons after the mutation are shifted, changing every amino acid that follows. Substitutions only change one codon."},
+  {cat:"Mutations",q:"What is a silent mutation?",a:"A substitution mutation that does NOT change the amino acid produced, because multiple codons can code for the same amino acid. The protein remains functional."},
+  {cat:"Mutations",q:"What are the three main causes of mutations?",a:"A. Errors during DNA replication (most common). B. Environmental mutagens — UV radiation, X-rays, tobacco smoke. C. Inherited from a parent via sperm or egg."},
+  {cat:"Mutations",q:"How does a mutation in DMD lead to the disease?",a:"A deletion or other mutation in the dystrophin gene changes the mRNA sequence → wrong amino acids assembled → dystrophin protein misfolds and cannot function → muscle damage."},
+  {cat:"Mutations",q:"What is the DNA base sequence and why does it matter?",a:"DNA is encoded by 4 bases: A, T, C, G. Their order determines which amino acids are made. A single change in order can disrupt the entire protein."},
+  {cat:"Chromosomes",q:"What is a chromosome?",a:"A highly condensed structure of DNA. Each chromosome consists of two identical sister chromatids joined at the centromere (after DNA replication). Humans have 46 chromosomes (23 pairs)."},
+  {cat:"Chromosomes",q:"What is the difference between a replicated and unreplicated chromosome?",a:"An unreplicated chromosome has 1 chromatid (1 DNA molecule). A replicated chromosome has 2 sister chromatids (2 identical DNA molecules). DNA replication does NOT change the chromosome NUMBER."},
+  {cat:"Chromosomes",q:"What are homologous chromosomes?",a:"A matching pair of chromosomes — one inherited from each parent. They are the same size and carry the same genes at the same locations, but may carry different alleles."},
+  {cat:"Chromosomes",q:"What are autosomes vs. sex chromosomes?",a:"Autosomes are pairs 1–22; they are the same in males and females. Sex chromosomes are pair 23: females have XX, males have XY."},
+  {cat:"Chromosomes",q:"What is a karyotype?",a:"An organized image of all 46 chromosomes arranged in homologous pairs by size, shape, and banding pattern. Used to detect chromosomal abnormalities (e.g. Down syndrome = extra chromosome 21)."},
+  {cat:"Chromosomes",q:"What is the difference between diploid (2n) and haploid (n)?",a:"Diploid (2n) cells have 2 copies of each chromosome (46 in humans) — all body (somatic) cells. Haploid (n) cells have 1 copy (23 in humans) — only gametes (sperm and egg)."},
+  {cat:"Chromosomes",q:"What are somatic cells vs. germline cells?",a:"Somatic cells are all body cells (diploid, 2n = 46). Germline cells are the reproductive cells in the testes and ovaries that produce gametes through meiosis (haploid, n = 23)."},
+  {cat:"Mitosis",q:"What is mitosis and what is its purpose?",a:"Mitosis is cell division that produces 2 genetically identical diploid daughter cells (2n = 46). Purpose: growth, tissue repair, and replacement of old or damaged cells."},
+  {cat:"Mitosis",q:"What are the four stages of mitosis?",a:"1. Prophase: chromosomes condense, spindle forms. 2. Metaphase: chromosomes align at equator. 3. Anaphase: sister chromatids separate to opposite poles. 4. Telophase + Cytokinesis: two daughter cells form."},
+  {cat:"Mitosis",q:"What happens in anaphase of mitosis?",a:"The spindle fibers pull sister chromatids apart and drag them to opposite poles of the cell, ensuring each daughter cell receives one complete copy of the genome."},
+  {cat:"Mitosis",q:"What is the result of mitosis?",a:"2 daughter cells that are genetically IDENTICAL to each other and to the parent cell. Each has the diploid number (2n = 46 chromosomes in humans)."},
+  {cat:"Mitosis",q:"If a mutation occurs in one skin cell before mitosis, what happens?",a:"The mutation is copied and passed to both daughter cells. All subsequent cells produced from this lineage will carry the same mutation."},
+  {cat:"Meiosis",q:"What is meiosis and what is its purpose?",a:"Meiosis is cell division in reproductive organs (testes/ovaries) that produces 4 genetically different haploid gametes (n = 23). Purpose: sexual reproduction and genetic variation."},
+  {cat:"Meiosis",q:"What are the two rounds of division in meiosis?",a:"Meiosis I: homologous chromosomes separate → 2 haploid cells. Meiosis II: sister chromatids separate → 4 haploid cells (gametes). Each gamete has 23 chromosomes."},
+  {cat:"Meiosis",q:"What is crossing over and when does it occur?",a:"During Prophase I of meiosis, homologous chromosomes pair up and exchange segments of DNA. This shuffles alleles and increases genetic variation in gametes."},
+  {cat:"Meiosis",q:"What is independent assortment?",a:"During Metaphase I, homologous chromosome pairs line up randomly. Each pair faces either pole independently, so the combination of chromosomes in the gametes is random — increasing variation."},
+  {cat:"Meiosis",q:"Why must gametes be haploid?",a:"So that when a sperm (n=23) fertilizes an egg (n=23), the resulting zygote is diploid (2n=46) with the correct chromosome number. If gametes were diploid, the zygote would have 92 chromosomes."},
+  {cat:"Meiosis",q:"What is a zygote?",a:"The fertilized egg formed when a sperm and egg fuse. It is diploid (2n = 46) and is the starting cell for a new organism."},
+  {cat:"Meiosis",q:"What are the three sources of genetic variation in meiosis?",a:"1. Crossing over (Prophase I). 2. Independent assortment (Metaphase I). 3. Random fertilization — any sperm can fertilize any egg."},
+  {cat:"Mitosis vs Meiosis",q:"Where does mitosis occur? Where does meiosis occur?",a:"Mitosis: all somatic (body) cells throughout the body. Meiosis: only in germline cells of the reproductive organs (testes in males, ovaries in females)."},
+  {cat:"Mitosis vs Meiosis",q:"How many daughter cells does each produce, and what is their chromosome number?",a:"Mitosis → 2 diploid (2n = 46) identical daughter cells. Meiosis → 4 haploid (n = 23) genetically different daughter cells."},
+  {cat:"Mitosis vs Meiosis",q:"Are the daughter cells genetically identical in mitosis and meiosis?",a:"Mitosis: YES — daughter cells are genetically identical to the parent. Meiosis: NO — due to crossing over and independent assortment, all 4 gametes are genetically unique."},
+  {cat:"Mitosis vs Meiosis",q:"What separates in Anaphase I vs Anaphase II of meiosis?",a:"Anaphase I: homologous chromosomes separate (still as double-stranded chromatids). Anaphase II (and mitosis anaphase): sister chromatids separate into individual chromosomes."},
+  {cat:"Genetics Vocab",q:"What is a gene?",a:"A segment of DNA on a chromosome that codes for one specific protein (and therefore one trait). Humans have approximately 20,000 genes."},
+  {cat:"Genetics Vocab",q:"What is an allele?",a:"Different versions of the same gene. For example, the eye color gene has alleles for brown and blue. Every person inherits 2 alleles for each gene — one from each parent."},
+  {cat:"Genetics Vocab",q:"What is the difference between genotype and phenotype?",a:"Genotype = the actual alleles an organism has (e.g. Bb). Phenotype = the physical trait that is expressed (e.g. brown eyes). Dominant alleles determine the phenotype when present."},
+  {cat:"Genetics Vocab",q:"What is the difference between homozygous and heterozygous?",a:"Homozygous: both alleles are identical (AA or aa). Heterozygous: the two alleles are different (Aa). A heterozygous individual expresses the dominant allele."},
+  {cat:"Genetics Vocab",q:"What are dominant and recessive alleles?",a:"Dominant (capital letter): always expressed when present — even one copy is enough. Recessive (lowercase letter): only expressed when homozygous (two copies, e.g. aa)."},
+  {cat:"Punnett Squares",q:"What does a Punnett square show?",a:"The possible genotypes and phenotypes of offspring from a cross, and the probability of each outcome. Outside = parent gametes; inside = possible offspring genotypes."},
+  {cat:"Punnett Squares",q:"In a Tt × Tt cross, what are the offspring ratios?",a:"Genotype ratio: 1 TT : 2 Tt : 1 tt. Phenotype ratio: 3 dominant (TT or Tt) : 1 recessive (tt). So 75% show dominant trait, 25% show recessive."},
+  {cat:"Punnett Squares",q:"How do you write genotypes for X-linked traits?",a:"Show the allele as a superscript on X. Example: X^N = normal allele, X^n = affected allele. Male genotypes: X^N Y (normal) or X^n Y (affected). Female: X^N X^N, X^N X^n (carrier), X^n X^n (affected)."},
+  {cat:"Punnett Squares",q:"A carrier mother (X^N X^n) × normal father (X^N Y). What are the offspring?",a:"25% X^N X^N (normal girl), 25% X^N X^n (carrier girl), 25% X^N Y (normal boy), 25% X^n Y (affected boy). So 50% chance of an affected son."},
+  {cat:"Pedigrees",q:"What are the key symbols in a pedigree?",a:"Square = male. Circle = female. Filled shape = affected individual. Horizontal line = mating. Vertical line = offspring. Half-filled = carrier (sometimes used)."},
+  {cat:"Pedigrees",q:"How do you determine if a trait is dominant or recessive from a pedigree?",a:"Recessive: two unaffected parents can have an affected child. Dominant: trait appears in every generation; affected individuals usually have an affected parent."},
+  {cat:"Pedigrees",q:"How do you determine if a trait is autosomal or X-linked from a pedigree?",a:"X-linked: affects males far more than females; carrier mothers pass it to sons. Autosomal: affects males and females equally across generations."},
+  {cat:"Pedigrees",q:"In a pedigree for an autosomal recessive trait, what is the genotype of unaffected parents who have an affected child?",a:"Both parents must be carriers: genotype Aa. Each parent contributed one recessive allele (a) to the affected child (aa)."},
+  {cat:"DMD & X-Linked",q:"Why does DMD affect mostly boys?",a:"The dystrophin gene is on the X chromosome (X-linked recessive). Boys have only one X chromosome — if it carries the mutated allele X^n, they are affected. Girls have two X chromosomes and can compensate with a normal allele."},
+  {cat:"DMD & X-Linked",q:"Can a girl be a carrier for DMD? Can a boy be a carrier?",a:"Yes — a girl with genotype X^N X^n is a carrier: she is unaffected but can pass the allele to her children. A boy CANNOT be a carrier — he either has DMD (X^n Y) or does not (X^N Y)."},
+  {cat:"DMD & X-Linked",q:"How is the DMD mutation inherited?",a:"The mutation occurs in the dystrophin gene on the X chromosome inside a reproductive cell (sperm or egg). It is passed from a carrier mother to her sons through meiosis and fertilization."},
+  {cat:"DMD & X-Linked",q:"What is the difference between autosomal and X-linked inheritance?",a:"Autosomal: gene is on chromosomes 1–22; affects males and females equally. X-linked: gene is on the X chromosome; males (XY) only have one copy, so recessive X-linked traits affect males more."},
+  {cat:"DMD & X-Linked",q:"How does the dystrophin mutation cause DMD at the molecular level?",a:"A deletion/mutation in the dystrophin gene → altered mRNA sequence → wrong amino acids assembled → dystrophin protein misfolds → cannot anchor actin to the ECM → muscle cells are damaged during contraction."},
+  {cat:"DMD & X-Linked",q:"What is cystic fibrosis and what type of inheritance does it follow?",a:"CF is caused by a mutation in the CFTR gene causing thick mucus in lungs and pancreas. It is autosomal recessive — both parents must carry at least one recessive allele (a) for a child to be affected (aa)."},
+  {cat:"DMD & X-Linked",q:"What is Huntington's disease and what type of inheritance does it follow?",a:"HD is autosomal dominant — even one copy of the mutated allele causes the disease. Symptoms appear at age 30–50. Every person who inherits the HD allele will eventually develop the disease."},
+];
+
+const BIO_MATCH_POOL=[
+  {id:0,  term:"Gene expression",        def:"The process of using DNA to make a protein (transcription + translation)."},
+  {id:1,  term:"Transcription",          def:"Making mRNA from a DNA template, in the nucleus."},
+  {id:2,  term:"Translation",            def:"Building a protein from mRNA instructions, at the ribosome."},
+  {id:3,  term:"mRNA",                   def:"Messenger RNA that carries genetic code from nucleus to ribosome."},
+  {id:4,  term:"tRNA",                   def:"Transfer RNA that brings the correct amino acid to the ribosome."},
+  {id:5,  term:"Ribosome",               def:"The cell organelle where translation (protein assembly) takes place."},
+  {id:6,  term:"Codon",                  def:"A 3-letter sequence on mRNA that codes for one amino acid."},
+  {id:7,  term:"Mutation",               def:"A change in the base sequence of DNA."},
+  {id:8,  term:"Substitution mutation",  def:"One base is swapped for a different base."},
+  {id:9,  term:"Deletion mutation",      def:"One or more bases are removed from the DNA sequence."},
+  {id:10, term:"Insertion mutation",     def:"One or more extra bases are added into the DNA sequence."},
+  {id:11, term:"Silent mutation",        def:"A substitution that does NOT change the amino acid produced."},
+  {id:12, term:"Chromosome",             def:"A condensed structure of DNA and protein; humans have 46."},
+  {id:13, term:"Homologous chromosomes", def:"A matching pair of chromosomes, one from each parent."},
+  {id:14, term:"Karyotype",              def:"An ordered display of all 46 human chromosomes arranged in pairs."},
+  {id:15, term:"Diploid (2n)",           def:"A cell with two full sets of chromosomes (46 in humans)."},
+  {id:16, term:"Haploid (n)",            def:"A cell with one set of chromosomes (23 in humans) — gametes only."},
+  {id:17, term:"Mitosis",                def:"Cell division producing 2 identical diploid daughter cells."},
+  {id:18, term:"Meiosis",                def:"Cell division producing 4 genetically different haploid gametes."},
+  {id:19, term:"Crossing over",          def:"Exchange of DNA between homologous chromosomes in Prophase I."},
+  {id:20, term:"Independent assortment", def:"Random alignment of homologous pairs in Metaphase I."},
+  {id:21, term:"Gamete",                 def:"A sex cell (sperm or egg) that is haploid (n = 23)."},
+  {id:22, term:"Zygote",                 def:"The diploid cell formed when sperm and egg fuse (fertilization)."},
+  {id:23, term:"Allele",                 def:"A different version of the same gene."},
+  {id:24, term:"Genotype",               def:"The actual alleles an organism possesses (e.g. Bb)."},
+  {id:25, term:"Phenotype",              def:"The observable trait expressed by the genotype."},
+  {id:26, term:"Homozygous",             def:"Both alleles for a gene are identical (AA or aa)."},
+  {id:27, term:"Heterozygous",           def:"The two alleles for a gene are different (Aa)."},
+  {id:28, term:"Dominant allele",        def:"Always expressed when present; written as a capital letter."},
+  {id:29, term:"Recessive allele",       def:"Only expressed when homozygous; written as a lowercase letter."},
+  {id:30, term:"Carrier",                def:"A heterozygous individual who carries a recessive allele without showing the trait."},
+  {id:31, term:"X-linked trait",         def:"A trait whose gene is on the X chromosome; affects males more."},
+  {id:32, term:"Autosomal trait",        def:"A trait whose gene is on chromosomes 1–22; affects both sexes equally."},
+  {id:33, term:"DMD",                    def:"An X-linked recessive disease caused by a mutation in the dystrophin gene."},
+  {id:34, term:"Dystrophin",             def:"A protein that anchors muscle fibres to the ECM; absent or non-functional in DMD."},
+  {id:35, term:"Cystic fibrosis",        def:"An autosomal recessive disease causing thick mucus in the lungs."},
+  {id:36, term:"Huntington's disease",   def:"An autosomal dominant disease causing neurodegeneration in adults."},
+  {id:37, term:"Pedigree",               def:"A diagram tracking the inheritance of a trait across generations."},
+  {id:38, term:"Somatic cell",           def:"Any diploid body cell (not a gamete)."},
+  {id:39, term:"Germline cell",          def:"A reproductive cell in the testes or ovaries that produces gametes."},
+];
+
+const BIO_FITB_BANK=[
+  {topic:"Gene Expression",sentence:"Gene expression has two main stages: {{transcription}}, which occurs in the {{nucleus}}, and {{translation}}, which occurs at the {{ribosome}}.",answers:["transcription","nucleus","translation","ribosome"],distractors:["cytoplasm","mutation","mRNA","chromosome"]},
+  {topic:"Gene Expression",sentence:"During transcription, {{DNA}} is used as a template to produce a strand of {{mRNA}}, which then leaves the nucleus through its {{pores}}.",answers:["DNA","mRNA","pores"],distractors:["tRNA","ribosome","protein","nucleus"]},
+  {topic:"Gene Expression",sentence:"During translation, the ribosome reads the mRNA in triplets called {{codons}}. Each codon is matched by a {{tRNA}} molecule that carries the correct {{amino acid}}.",answers:["codons","tRNA","amino acid"],distractors:["alleles","bases","protein","anticodon"]},
+  {topic:"Gene Expression",sentence:"After translation, the chain of {{amino acids}} folds into a specific {{3D}} shape, which determines the protein's {{function}}.",answers:["amino acids","3D","function"],distractors:["nucleotides","flat","size","mRNA"]},
+  {topic:"Mutations",sentence:"A {{substitution}} mutation swaps one base for another. A {{deletion}} removes bases, while an {{insertion}} adds extra bases to the sequence.",answers:["substitution","deletion","insertion"],distractors:["frameshift","silent","missense","inversion"]},
+  {topic:"Mutations",sentence:"Insertion and deletion mutations cause a {{frameshift}}, shifting all codons downstream and changing every {{amino acid}} after the mutation site.",answers:["frameshift","amino acid"],distractors:["silent","protein","chromosome","base"]},
+  {topic:"Mutations",sentence:"A {{silent}} mutation changes a DNA base but does not change the {{amino acid}} produced, so the protein remains {{functional}}.",answers:["silent","amino acid","functional"],distractors:["deletion","protein","non-functional","insertion"]},
+  {topic:"Mutations",sentence:"Mutations can be caused by errors during {{DNA replication}}, environmental factors like {{UV radiation}}, or can be {{inherited}} through gametes.",answers:["DNA replication","UV radiation","inherited"],distractors:["mitosis","oxygen","silent","random"]},
+  {topic:"Chromosomes",sentence:"Humans have {{46}} chromosomes arranged in {{23}} homologous pairs. The 23rd pair are the {{sex chromosomes}}, which are XX in females and XY in males.",answers:["46","23","sex chromosomes"],distractors:["44","22","autosomes","47"]},
+  {topic:"Chromosomes",sentence:"A {{karyotype}} is an organised display of all chromosomes arranged by size and shape. An extra chromosome on pair 21 indicates {{Down syndrome}}.",answers:["karyotype","Down syndrome"],distractors:["pedigree","DMD","genome","mutation"]},
+  {topic:"Chromosomes",sentence:"A {{diploid}} cell contains two full sets of chromosomes (2n = 46). A {{haploid}} cell contains only one set (n = 23) and is found only in {{gametes}}.",answers:["diploid","haploid","gametes"],distractors:["somatic","germline","zygote","replicated"]},
+  {topic:"Chromosomes",sentence:"A replicated chromosome has {{2}} sister chromatids, but replicating DNA does NOT change the {{chromosome number}}. An unreplicated chromosome has only {{1}} chromatid.",answers:["2","chromosome number","1"],distractors:["4","DNA sequence","3","allele"]},
+  {topic:"Mitosis",sentence:"Mitosis produces {{2}} genetically {{identical}} daughter cells, each with the {{diploid}} chromosome number (2n = 46).",answers:["2","identical","diploid"],distractors:["4","different","haploid","8"]},
+  {topic:"Mitosis",sentence:"In {{metaphase}}, chromosomes line up at the cell's equator. In {{anaphase}}, sister chromatids are pulled to opposite {{poles}} by spindle fibres.",answers:["metaphase","anaphase","poles"],distractors:["prophase","telophase","equator","nucleus"]},
+  {topic:"Mitosis",sentence:"Mitosis occurs in {{somatic}} cells and is used for {{growth}}, tissue {{repair}}, and replacement of old cells.",answers:["somatic","growth","repair"],distractors:["germline","reproduction","mutation","gametes"]},
+  {topic:"Meiosis",sentence:"Meiosis produces {{4}} genetically {{different}} haploid cells. It occurs in the {{reproductive}} organs — the testes and ovaries.",answers:["4","different","reproductive"],distractors:["2","identical","somatic","8"]},
+  {topic:"Meiosis",sentence:"In Meiosis I, {{homologous chromosomes}} separate. In Meiosis II, {{sister chromatids}} separate, resulting in four haploid {{gametes}}.",answers:["homologous chromosomes","sister chromatids","gametes"],distractors:["alleles","DNA strands","zygotes","somatic cells"]},
+  {topic:"Meiosis",sentence:"{{Crossing over}} occurs in Prophase I when homologous chromosomes exchange segments of DNA, increasing {{genetic variation}}.",answers:["Crossing over","genetic variation"],distractors:["Independent assortment","mutation","fertilization","replication"]},
+  {topic:"Meiosis",sentence:"{{Independent assortment}} is the random alignment of homologous pairs in Metaphase I. Together with crossing over and random {{fertilization}}, it explains why no two gametes are genetically {{identical}}.",answers:["Independent assortment","fertilization","identical"],distractors:["Crossing over","mutation","different","replication"]},
+  {topic:"Meiosis",sentence:"Gametes must be {{haploid}} so that fertilization restores the {{diploid}} chromosome number. The fertilised egg is called a {{zygote}}.",answers:["haploid","diploid","zygote"],distractors:["diploid","haploid","embryo","gamete"]},
+  {topic:"Genetics Vocab",sentence:"A {{gene}} is a segment of DNA that codes for one protein. Different versions of the same gene are called {{alleles}}. Every person inherits {{2}} alleles per gene — one from each parent.",answers:["gene","alleles","2"],distractors:["chromosome","codons","4","mutation"]},
+  {topic:"Genetics Vocab",sentence:"If an organism's two alleles are the same it is {{homozygous}}; if different it is {{heterozygous}}. The {{dominant}} allele is always expressed; the {{recessive}} only when homozygous.",answers:["homozygous","heterozygous","dominant","recessive"],distractors:["diploid","haploid","codominant","X-linked"]},
+  {topic:"Genetics Vocab",sentence:"The {{genotype}} describes the alleles present (e.g. Bb); the {{phenotype}} is the observable trait. A {{carrier}} is heterozygous and shows no symptoms but can pass on the allele.",answers:["genotype","phenotype","carrier"],distractors:["karyotype","mutation","pedigree","sequence"]},
+  {topic:"Punnett Squares",sentence:"In a Punnett square, the letters on the {{outside}} represent the parent {{gametes}}. The letters on the {{inside}} represent the possible offspring {{genotypes}}.",answers:["outside","gametes","inside","genotypes"],distractors:["inside","alleles","outside","phenotypes"]},
+  {topic:"Punnett Squares",sentence:"When two heterozygous parents (Aa × Aa) cross, the offspring ratio is 3 {{dominant}} phenotype to 1 {{recessive}} phenotype, or {{75}}% to {{25}}%.",answers:["dominant","recessive","75","25"],distractors:["recessive","dominant","50","50"]},
+  {topic:"Pedigrees",sentence:"In a pedigree, a {{square}} represents a male and a {{circle}} represents a female. A {{filled}} shape indicates an affected individual.",answers:["square","circle","filled"],distractors:["triangle","rectangle","empty","shaded"]},
+  {topic:"Pedigrees",sentence:"If two {{unaffected}} parents have an affected child, the trait must be {{recessive}}. If a trait appears in every generation, it is likely {{dominant}}.",answers:["unaffected","recessive","dominant"],distractors:["affected","dominant","recessive","X-linked"]},
+  {topic:"Pedigrees",sentence:"An {{X-linked}} trait affects males more than females because males have only one {{X}} chromosome, while females can be {{carriers}} with two X chromosomes.",answers:["X-linked","X","carriers"],distractors:["autosomal","Y","affected","dominant"]},
+  {topic:"DMD & X-Linked",sentence:"DMD is caused by a mutation in the {{dystrophin}} gene, which is located on the {{X}} chromosome. This makes it an X-linked {{recessive}} disorder.",answers:["dystrophin","X","recessive"],distractors:["actin","Y","dominant","myosin"]},
+  {topic:"DMD & X-Linked",sentence:"Boys are more affected by DMD because they have only one {{X}} chromosome. If it carries the mutated allele, they have no {{backup}} copy. Girls can be {{carriers}} instead.",answers:["X","backup","carriers"],distractors:["Y","dominant","affected","normal"]},
+  {topic:"DMD & X-Linked",sentence:"In DMD, the mutated dystrophin gene produces a non-functional protein. Dystrophin normally anchors {{actin}} to the {{ECM}}, preventing muscle damage during {{contraction}}.",answers:["actin","ECM","contraction"],distractors:["myosin","nucleus","relaxation","ATP"]},
+  {topic:"DMD & X-Linked",sentence:"Cystic fibrosis is {{autosomal recessive}} — both parents must contribute a {{recessive}} allele for a child to be affected. A person with one allele is an unaffected {{carrier}}.",answers:["autosomal recessive","recessive","carrier"],distractors:["X-linked dominant","dominant","affected","autosomal dominant"]},
+  {topic:"DMD & X-Linked",sentence:"Huntington's disease is {{autosomal dominant}} — only {{one}} copy of the mutated allele is needed to cause the disease. Symptoms typically appear between ages {{30}} and 50.",answers:["autosomal dominant","one","30"],distractors:["autosomal recessive","two","20","X-linked"]},
+];
+
+// ── BIO FLASHCARD STATE ──
+const BIO_CATS=["All",...[...new Set(BIO_ALL.map(c=>c.cat))]];
+let bioActive="All",bioDeck=[],bioIdx=0,bioFlipped=false;
+function bioGetDeck(){return bioActive==="All"?[...BIO_ALL]:BIO_ALL.filter(c=>c.cat===bioActive);}
+function bioShuffle(){bioDeck.sort(()=>Math.random()-0.5);bioIdx=0;bioFlipped=false;document.getElementById("bio-card").classList.remove("flipped");bioRender();}
+function bioSetActive(cat){bioActive=cat;bioDeck=bioGetDeck();bioIdx=0;bioFlipped=false;document.getElementById("bio-card").classList.remove("flipped");bioRenderTabs();bioRender();}
+function bioFlip(){bioFlipped=!bioFlipped;document.getElementById("bio-card").classList.toggle("flipped",bioFlipped);bioRender();}
+function bioGo(dir){const n=bioIdx+dir;if(n<0||n>=bioDeck.length)return;bioIdx=n;bioFlipped=false;document.getElementById("bio-card").classList.remove("flipped");bioRender();}
+function bioRenderTabs(){
+  document.getElementById("bio-tabs").innerHTML=BIO_CATS.map(c=>
+    `<button class="tab${c===bioActive?" active":""}" onclick="bioSetActive('${c.replace(/'/g,"\\'")}')"> ${c}</button>`
+  ).join("");
+}
+function bioRender(){
+  const c=bioDeck[bioIdx];
+  document.getElementById("bio-q-text").textContent=c.q;
+  document.getElementById("bio-q-cat").textContent=c.cat;
+  document.getElementById("bio-a-text").textContent=c.a;
+  document.getElementById("bio-prog").textContent=`${bioIdx+1} / ${bioDeck.length}`;
+  document.getElementById("bio-prev-btn").disabled=bioIdx===0;
+  document.getElementById("bio-next-btn").disabled=bioIdx===bioDeck.length-1;
+  document.getElementById("bio-dots").innerHTML=bioDeck.map((_,i)=>
+    `<div class="dot${i<bioIdx?" seen":i===bioIdx?" current":""}" onclick="bioJumpTo(${i})" title="Card ${i+1}"></div>`
+  ).join("");
+  document.getElementById("bio-done").classList.toggle("show",bioIdx===bioDeck.length-1&&bioFlipped);
+}
+function bioJumpTo(i){bioIdx=i;bioFlipped=false;document.getElementById("bio-card").classList.remove("flipped");bioRender();}
+bioDeck=bioGetDeck();bioRenderTabs();bioRender();
+
+// ── BIO MODE SWITCHER ──
+function bioSwitchMode(mode){
+  ['flash','match','fitb'].forEach(m=>{
+    document.getElementById('bio-screen-'+m).classList.toggle('visible',m===mode);
+    document.getElementById('bio-btn-'+m).classList.toggle('active',m===mode);
+  });
+  if(mode==='match'&&!bioMatchInitialised)bioNewMatchRound();
+  if(mode==='fitb'&&!bioFitbInitialised)bioNewFitbRound();
+}
+
+// ── BIO MATCH STATE ──
+const BIO_ROUND_SIZE=6;
+let bioMatchInitialised=false,bioMatchSelected=null,bioMatchMatched=0,bioMatchMistakes=0,bioMatchPairs=[],bioMatchLocked=false;
+function bioNewMatchRound(){
+  bioMatchInitialised=true;bioMatchSelected=null;bioMatchMatched=0;bioMatchMistakes=0;bioMatchLocked=false;
+  bioMatchPairs=[...BIO_MATCH_POOL].sort(()=>Math.random()-0.5).slice(0,BIO_ROUND_SIZE);
+  document.getElementById("bio-match-complete").classList.remove("show");
+  document.getElementById("bio-match-score").textContent="0";
+  document.getElementById("bio-match-total").textContent=BIO_ROUND_SIZE;
+  document.getElementById("bio-match-mistakes").textContent="0";
+  const shuffledDefs=[...bioMatchPairs].sort(()=>Math.random()-0.5);
+  document.getElementById("bio-match-terms").innerHTML=bioMatchPairs.map(p=>`<div class="match-tile term" data-id="${p.id}" data-type="term" onclick="bioMatchClick(this)">${p.term}</div>`).join("");
+  document.getElementById("bio-match-defs").innerHTML=shuffledDefs.map(p=>`<div class="match-tile" data-id="${p.id}" data-type="def" onclick="bioMatchClick(this)">${p.def}</div>`).join("");
+}
+function bioMatchClick(el){
+  if(bioMatchLocked||el.classList.contains("matched"))return;
+  if(bioMatchSelected===el){el.classList.remove("selected");bioMatchSelected=null;return;}
+  if(bioMatchSelected&&bioMatchSelected.dataset.type===el.dataset.type){bioMatchSelected.classList.remove("selected");bioMatchSelected=el;el.classList.add("selected");return;}
+  if(!bioMatchSelected){bioMatchSelected=el;el.classList.add("selected");return;}
+  const a=bioMatchSelected,b=el;a.classList.remove("selected");bioMatchSelected=null;
+  if(a.dataset.id===b.dataset.id){
+    a.classList.add("matched","just-matched");b.classList.add("matched","just-matched");
+    setTimeout(()=>{a.classList.remove("just-matched");b.classList.remove("just-matched");},500);
+    bioMatchMatched++;document.getElementById("bio-match-score").textContent=bioMatchMatched;
+    if(bioMatchMatched===BIO_ROUND_SIZE)setTimeout(()=>bioShowMatchComplete(),500);
+  }else{
+    bioMatchLocked=true;a.classList.add("wrong");b.classList.add("wrong");
+    bioMatchMistakes++;document.getElementById("bio-match-mistakes").textContent=bioMatchMistakes;
+    setTimeout(()=>{a.classList.remove("wrong");b.classList.remove("wrong");bioMatchLocked=false;},600);
+  }
+}
+function bioShowMatchComplete(){
+  const stars=bioMatchMistakes===0?"🌟🌟🌟":bioMatchMistakes<=2?"⭐⭐⭐":bioMatchMistakes<=5?"⭐⭐":"⭐";
+  document.getElementById("bio-match-stars").textContent=stars;
+  document.getElementById("bio-match-result-text").textContent=`${BIO_ROUND_SIZE} pairs matched with ${bioMatchMistakes} mistake${bioMatchMistakes!==1?"s":""}. ${bioMatchMistakes===0?"Perfect round!":bioMatchMistakes<=2?"Great job!":"Keep practising!"}`;
+  document.getElementById("bio-match-complete").classList.add("show");
+}
+
+// ── ENG FITB BANK ──
+const ENG_FITB_BANK=[
+  {topic:"Poetry Terms",sentence:"A {{metaphor}} makes a direct comparison stating one thing IS another, while a {{simile}} makes a comparison using the words 'like' or 'as'.",answers:["metaphor","simile"],distractors:["symbol","image","alliteration","personification"]},
+  {topic:"Poetry Terms",sentence:"{{Personification}} gives human qualities to non-human things. {{Imagery}} uses language that appeals to one or more of the five {{senses}}.",answers:["Personification","Imagery","senses"],distractors:["Symbolism","Tone","ideas","emotions"]},
+  {topic:"Poetry Terms",sentence:"The {{tone}} of a poem is the speaker's attitude toward the subject, while the {{mood}} is the feeling the poem creates in the {{reader}}.",answers:["tone","mood","reader"],distractors:["theme","form","writer","structure"]},
+  {topic:"Poetry Terms",sentence:"{{Symbolism}} occurs when an object represents something beyond its literal meaning. {{Repetition}} of words or phrases emphasises a key {{idea}}.",answers:["Symbolism","Repetition","idea"],distractors:["Metaphor","Rhyme","tone","image"]},
+  {topic:"Poetry Terms",sentence:"The {{theme}} is the central message a poem communicates about life. It goes beyond the topic — not just 'war', but what the poet says {{about}} war.",answers:["theme","about"],distractors:["tone","mood","within","through"]},
+  {topic:"Poetic Structure",sentence:"A {{sonnet}} has {{14}} lines and is typically written in iambic pentameter. A {{haiku}} has three lines with a 5-7-5 syllable structure.",answers:["sonnet","14","haiku"],distractors:["ballad","12","limerick","elegy"]},
+  {topic:"Poetic Structure",sentence:"{{Free verse}} poetry has no fixed rhyme scheme or meter. {{Enjambment}} occurs when a line continues without a pause, pushing the reader {{forward}}.",answers:["Free verse","Enjambment","forward"],distractors:["Sonnets","Caesura","backward","faster"]},
+  {topic:"Poetic Structure",sentence:"A {{caesura}} is a mid-line pause that creates a shift in tone. Short, choppy lines create {{tension}}, while long flowing lines feel calm or {{overwhelming}}.",answers:["caesura","tension","overwhelming"],distractors:["volta","rhythm","peaceful","joyful"]},
+  {topic:"Plot — The Bitter Side of Sweet",sentence:"On the cocoa farm, the boys are locked in sheds, watched by the {{pisteur}}, and beaten for disobeying — conditions that amount to child {{slavery}}.",answers:["pisteur","slavery"],distractors:["farmer","poverty","overseer","labour"]},
+  {topic:"Plot — The Bitter Side of Sweet",sentence:"The children decide to escape when {{Seydou}}'s injury becomes life-threatening and {{Amadou}} realises that staying on the farm means {{death}}.",answers:["Seydou","Amadou","death"],distractors:["Khadija","Moussa","punishment","hunger"]},
+  {topic:"Characters",sentence:"{{Amadou}} begins the novel as a passive victim but grows into a bold {{leader}} who forms alliances and believes escape is worth fighting for.",answers:["Amadou","leader"],distractors:["Moussa","follower","Seydou","stranger"]},
+  {topic:"Characters",sentence:"{{Khadija}} is fierce and street-smart, having learned to trust {{no one}}. Her arc shows that survival can mean working {{together}}.",answers:["Khadija","no one","together"],distractors:["Seydou","everyone","alone","apart"]},
+  {topic:"Characters",sentence:"{{Moussa}} is a victim who became {{complicit}} in exchange for small privileges. His stagnation contrasts with Amadou's growth and shows what happens when {{hope}} is destroyed.",answers:["Moussa","complicit","hope"],distractors:["Amadou","resistant","freedom","courage"]},
+  {topic:"Themes",sentence:"The theme of Freedom vs. Slavery shows that every small act — hiding food, whispering {{plans}} — is a reclaiming of {{freedom}}. Sullivan argues slavery exists {{today}}.",answers:["plans","freedom","today"],distractors:["hope","survival","yesterday","everywhere"]},
+  {topic:"Themes",sentence:"Hope is not {{passive}} — it is an act of {{resistance}}. To hope when you have every reason to give up is a form of {{courage}}.",answers:["passive","resistance","courage"],distractors:["active","weakness","survival","hope"]},
+  {topic:"Themes",sentence:"Family loyalty is shown through Amadou's love for {{Seydou}}, which drives every major decision. Sullivan's message is that {{family}} gives people reason to {{survive}}.",answers:["Seydou","family","survive"],distractors:["Khadija","loyalty","escape","fight"]},
+  {topic:"Themes",sentence:"{{Exploitation}} thrives in {{silence}}. Sullivan suggests that awareness of who makes our chocolate is the first step toward ending {{injustice}}.",answers:["Exploitation","silence","injustice"],distractors:["Freedom","ignorance","poverty","inequality"]},
+  {topic:"Final Review",sentence:"Sullivan creates suspense through short {{sentences}}, withheld {{information}}, and cliffhanger chapter {{endings}}.",answers:["sentences","information","endings"],distractors:["paragraphs","dialogue","beginnings","descriptions"]},
+  {topic:"Final Review",sentence:"Hope separates {{Amadou}} from {{Moussa}} — Sullivan presents it as a deliberate, painful choice, not {{naive}} optimism.",answers:["Amadou","Moussa","naive"],distractors:["Khadija","Seydou","blind","false"]},
+  {topic:"Final Review",sentence:"True survival is impossible without {{freedom}}. Life on the farm means the boys are alive but {{destroyed}} inside — a life without freedom is a slower form of {{death}}.",answers:["freedom","destroyed","death"],distractors:["hope","trapped","life","pain"]},
+];
+
+// ── ENG FITB STATE ──
+const ENG_FITB_ROUND_SIZE=10;
+let engFitbInitialised=false,engFitbRound=[],engFitbQIdx=0,engFitbCorrectCount=0,engFitbResults=[];
+let engFitbBlanks=[],engFitbAnswered=false,engFitbLastFocused=null,engFitbChipFocus=-1;
+
+function engNewFitbRound(){
+  engFitbInitialised=true;
+  engFitbRound=[...ENG_FITB_BANK].sort(()=>Math.random()-0.5).slice(0,ENG_FITB_ROUND_SIZE);
+  engFitbQIdx=0;engFitbCorrectCount=0;engFitbResults=[];engFitbAnswered=false;engFitbLastFocused=null;
+  document.getElementById("eng-fitb-complete").classList.remove("show");
+  document.getElementById("eng-fitb-correct").textContent="0";
+  document.getElementById("eng-fitb-total").textContent=ENG_FITB_ROUND_SIZE;
+  engRenderFitbPips();engLoadFitbQuestion();
+}
+function engRenderFitbPips(){
+  document.getElementById("eng-fitb-pips").innerHTML=engFitbRound.map((_,i)=>{
+    let cls="fitb-pip";
+    if(i<engFitbQIdx)cls+=engFitbResults[i]?" done-correct":" done-wrong";
+    else if(i===engFitbQIdx)cls+=" active";
+    return`<div class="${cls}"></div>`;
+  }).join("");
+}
+function engLoadFitbQuestion(){
+  if(engFitbQIdx>=engFitbRound.length){engShowFitbComplete();return;}
+  engFitbAnswered=false;engFitbBlanks=[];engFitbLastFocused=null;engFitbChipFocus=-1;
+  document.getElementById("eng-fitb-next-btn").disabled=true;
+  document.getElementById("eng-fitb-hint-btn").disabled=false;
+  document.getElementById("eng-fitb-feedback").textContent="";
+  document.getElementById("eng-fitb-feedback").className="fitb-feedback";
+  document.getElementById("eng-fitb-complete").classList.remove("show");
+  document.getElementById("eng-fitb-idx").textContent=engFitbQIdx+1;
+  engRenderFitbPips();
+  const q=engFitbRound[engFitbQIdx];
+  document.getElementById("eng-fitb-topic").textContent=q.topic;
+  let html=q.sentence,blankIdx=0;
+  html=html.replace(/\{\{([^}]+)\}\}/g,(match,answer)=>{
+    const id=`eng-blank-${blankIdx++}`;
+    const w=Math.max(80,answer.length*11);
+    return`<input class="fitb-blank" id="${id}" data-answer="${answer.toLowerCase()}" style="min-width:${w}px" placeholder="…" autocomplete="off" spellcheck="false" oninput="engFitbTyping()" onkeydown="engFitbKeydown(event)">`;
+  });
+  document.getElementById("eng-fitb-sentence").innerHTML=html;
+  q.answers.forEach((_,i)=>{
+    const el=document.getElementById(`eng-blank-${i}`);
+    engFitbBlanks.push({el,answer:q.answers[i].toLowerCase(),filled:false});
+    el.addEventListener('focus',()=>{engFitbLastFocused=engFitbBlanks[i];});
+  });
+  const bankWords=[...q.answers,...q.distractors].sort(()=>Math.random()-0.5);
+  document.getElementById("eng-fitb-chips").innerHTML=bankWords.map(w=>
+    `<div class="fitb-chip" data-word="${w}" onclick="engFitbChipClick(this)">${w}</div>`
+  ).join("");
+}
+function engSyncChipUsed(){
+  const usedWords=engFitbBlanks.map(b=>b.el.value.trim().toLowerCase()).filter(Boolean);
+  document.querySelectorAll('#eng-fitb-chips .fitb-chip').forEach(c=>{
+    const word=c.dataset.word.toLowerCase();
+    const usedCount=usedWords.filter(w=>w===word).length;
+    const chipIndex=[...document.querySelectorAll('#eng-fitb-chips .fitb-chip')].filter(x=>x.dataset.word.toLowerCase()===word).indexOf(c);
+    c.classList.toggle('used',chipIndex<usedCount);
+  });
+}
+function engFitbTyping(){
+  engSyncChipUsed();
+  const allFilled=engFitbBlanks.every(b=>b.el.value.trim()!=="");
+  if(allFilled&&!engFitbAnswered)engCheckFitb();
+}
+function engFitbKeydown(e){
+  if(e.key==="Enter"&&!engFitbAnswered)engCheckFitb();
+  if(e.key==="Tab"){
+    const blanks=engFitbBlanks.filter(b=>!b.el.disabled);
+    if(!blanks.length)return;
+    const cur=blanks.findIndex(b=>b===engFitbLastFocused);
+    const next=e.shiftKey?blanks[(cur-1+blanks.length)%blanks.length]:blanks[(cur+1)%blanks.length];
+    e.preventDefault();next.el.focus();
+  }
+}
+function engFitbChipClick(chip){
+  if(chip.classList.contains("used"))return;
+  const target=(engFitbLastFocused&&!engFitbLastFocused.el.disabled)?engFitbLastFocused:engFitbBlanks.find(b=>!b.el.disabled);
+  if(!target)return;
+  target.el.value=chip.dataset.word;
+  engFitbLastFocused=target;engFitbChipFocus=-1;
+  target.el.focus();engFitbTyping();
+}
+function engCheckFitb(){
+  if(engFitbAnswered)return;
+  engFitbAnswered=true;let allCorrect=true;
+  engFitbBlanks.forEach(b=>{
+    const val=b.el.value.trim().toLowerCase();
+    const correct=val===b.answer;
+    b.el.classList.add(correct?"correct":"wrong-ans");
+    b.el.disabled=true;
+    if(!correct){allCorrect=false;b.el.value=b.answer;}
+  });
+  engFitbResults[engFitbQIdx]=allCorrect;
+  if(allCorrect){
+    engFitbCorrectCount++;
+    document.getElementById("eng-fitb-correct").textContent=engFitbCorrectCount;
+    document.getElementById("eng-fitb-feedback").textContent="✓ Correct!";
+    document.getElementById("eng-fitb-feedback").className="fitb-feedback ok";
+  }else{
+    document.getElementById("eng-fitb-feedback").textContent="Not quite — correct answers shown above.";
+    document.getElementById("eng-fitb-feedback").className="fitb-feedback err";
+  }
+  document.getElementById("eng-fitb-next-btn").disabled=false;
+  document.getElementById("eng-fitb-hint-btn").disabled=true;
+  engRenderFitbPips();
+}
+function engFitbHint(){
+  engFitbBlanks.forEach(b=>{
+    if(!b.el.disabled&&b.el.value===""){b.el.value=b.answer[0].toUpperCase();b.el.focus();}
+  });
+  document.getElementById("eng-fitb-feedback").textContent="💡 First letters revealed!";
+  document.getElementById("eng-fitb-feedback").className="fitb-feedback";
+}
+function engFitbNext(){
+  engFitbQIdx++;
+  if(engFitbQIdx>=engFitbRound.length){engShowFitbComplete();return;}
+  engLoadFitbQuestion();
+}
+function engShowFitbComplete(){
+  engRenderFitbPips();
+  const pct=Math.round((engFitbCorrectCount/ENG_FITB_ROUND_SIZE)*100);
+  const stars=pct===100?"🌟🌟🌟":pct>=70?"⭐⭐⭐":pct>=40?"⭐⭐":"⭐";
+  document.getElementById("eng-fitb-stars").textContent=stars;
+  document.getElementById("eng-fitb-result-text").textContent=`${engFitbCorrectCount} / ${ENG_FITB_ROUND_SIZE} correct (${pct}%). ${pct===100?"Flawless!":pct>=70?"Great work!":"Keep reviewing!"}`;
+  document.getElementById("eng-fitb-complete").classList.add("show");
+}
+
+// ── ENG KEYBOARD (add fitb support) ──
+document.addEventListener("keydown",e=>{
+  const engPageVisible=document.getElementById("page-eng").classList.contains("visible");
+  if(!engPageVisible)return;
+  if(document.getElementById("eng-screen-flash").classList.contains("visible")){
+    if(e.key==="ArrowRight")engGo(1);
+    else if(e.key==="ArrowLeft")engGo(-1);
+    else if(e.key===" "){e.preventDefault();engFlip();}
+  }
+  if(document.getElementById("eng-screen-fitb").classList.contains("visible")){
+    if(document.activeElement&&document.activeElement.classList.contains("fitb-blank"))return;
+    if(e.key==="Enter"&&engFitbAnswered){e.preventDefault();engFitbNext();}
+  }
+});
+const BIO_FITB_ROUND_SIZE=10;
+let bioFitbInitialised=false,bioFitbRound=[],bioFitbQIdx=0,bioFitbCorrectCount=0,bioFitbResults=[];
+let bioFitbBlanks=[],bioFitbAnswered=false,bioFitbLastFocused=null,bioFitbChipFocus=-1;
+
+function bioNewFitbRound(){
+  bioFitbInitialised=true;
+  bioFitbRound=[...BIO_FITB_BANK].sort(()=>Math.random()-0.5).slice(0,BIO_FITB_ROUND_SIZE);
+  bioFitbQIdx=0;bioFitbCorrectCount=0;bioFitbResults=[];bioFitbAnswered=false;bioFitbLastFocused=null;
+  document.getElementById("bio-fitb-complete").classList.remove("show");
+  document.getElementById("bio-fitb-correct").textContent="0";
+  document.getElementById("bio-fitb-total").textContent=BIO_FITB_ROUND_SIZE;
+  bioRenderFitbPips();bioLoadFitbQuestion();
+}
+function bioRenderFitbPips(){
+  document.getElementById("bio-fitb-pips").innerHTML=bioFitbRound.map((_,i)=>{
+    let cls="fitb-pip";
+    if(i<bioFitbQIdx)cls+=bioFitbResults[i]?" done-correct":" done-wrong";
+    else if(i===bioFitbQIdx)cls+=" active";
+    return`<div class="${cls}"></div>`;
+  }).join("");
+}
+function bioLoadFitbQuestion(){
+  if(bioFitbQIdx>=bioFitbRound.length){bioShowFitbComplete();return;}
+  bioFitbAnswered=false;bioFitbBlanks=[];bioFitbLastFocused=null;bioFitbChipFocus=-1;
+  document.getElementById("bio-fitb-next-btn").disabled=true;
+  document.getElementById("bio-fitb-hint-btn").disabled=false;
+  document.getElementById("bio-fitb-feedback").textContent="";
+  document.getElementById("bio-fitb-feedback").className="fitb-feedback";
+  document.getElementById("bio-fitb-complete").classList.remove("show");
+  document.getElementById("bio-fitb-idx").textContent=bioFitbQIdx+1;
+  bioRenderFitbPips();
+  const q=bioFitbRound[bioFitbQIdx];
+  document.getElementById("bio-fitb-topic").textContent=q.topic;
+  let html=q.sentence,blankIdx=0;
+  html=html.replace(/\{\{([^}]+)\}\}/g,(match,answer)=>{
+    const id=`bio-blank-${blankIdx++}`;
+    const w=Math.max(80,answer.length*11);
+    return`<input class="fitb-blank" id="${id}" data-answer="${answer.toLowerCase()}" style="min-width:${w}px" placeholder="…" autocomplete="off" spellcheck="false" oninput="bioFitbTyping()" onkeydown="bioFitbKeydown(event)">`;
+  });
+  document.getElementById("bio-fitb-sentence").innerHTML=html;
+  q.answers.forEach((_,i)=>{
+    const el=document.getElementById(`bio-blank-${i}`);
+    bioFitbBlanks.push({el,answer:q.answers[i].toLowerCase(),filled:false});
+    el.addEventListener('focus',()=>{bioFitbLastFocused=bioFitbBlanks[i];});
+  });
+  const bankWords=[...q.answers,...q.distractors].sort(()=>Math.random()-0.5);
+  document.getElementById("bio-fitb-chips").innerHTML=bankWords.map(w=>
+    `<div class="fitb-chip" data-word="${w}" onclick="bioFitbChipClick(this)">${w}</div>`
+  ).join("");
+}
+function bioSyncChipUsed(){
+  const usedWords=bioFitbBlanks.map(b=>b.el.value.trim().toLowerCase()).filter(Boolean);
+  document.querySelectorAll('#bio-fitb-chips .fitb-chip').forEach(c=>{
+    const word=c.dataset.word.toLowerCase();
+    const usedCount=usedWords.filter(w=>w===word).length;
+    const chipIndex=[...document.querySelectorAll('#bio-fitb-chips .fitb-chip')].filter(x=>x.dataset.word.toLowerCase()===word).indexOf(c);
+    c.classList.toggle('used',chipIndex<usedCount);
+  });
+}
+function bioFitbTyping(){
+  bioSyncChipUsed();
+  const allFilled=bioFitbBlanks.every(b=>b.el.value.trim()!=="");
+  if(allFilled&&!bioFitbAnswered)bioCheckFitb();
+}
+function bioFitbKeydown(e){
+  if(e.key==="Enter"&&!bioFitbAnswered)bioCheckFitb();
+  if(e.key==="Tab"){
+    const blanks=bioFitbBlanks.filter(b=>!b.el.disabled);
+    if(!blanks.length)return;
+    const cur=blanks.findIndex(b=>b===bioFitbLastFocused);
+    const next=e.shiftKey?blanks[(cur-1+blanks.length)%blanks.length]:blanks[(cur+1)%blanks.length];
+    e.preventDefault();next.el.focus();
+  }
+}
+function bioFitbChipClick(chip){
+  if(chip.classList.contains("used"))return;
+  const target=(bioFitbLastFocused&&!bioFitbLastFocused.el.disabled)?bioFitbLastFocused:bioFitbBlanks.find(b=>!b.el.disabled);
+  if(!target)return;
+  target.el.value=chip.dataset.word;
+  bioFitbLastFocused=target;bioFitbChipFocus=-1;
+  target.el.focus();bioFitbTyping();
+}
+function bioCheckFitb(){
+  if(bioFitbAnswered)return;
+  bioFitbAnswered=true;let allCorrect=true;
+  bioFitbBlanks.forEach(b=>{
+    const val=b.el.value.trim().toLowerCase();
+    const correct=val===b.answer;
+    b.el.classList.add(correct?"correct":"wrong-ans");
+    b.el.disabled=true;
+    if(!correct){allCorrect=false;b.el.value=b.answer;}
+  });
+  bioFitbResults[bioFitbQIdx]=allCorrect;
+  if(allCorrect){
+    bioFitbCorrectCount++;
+    document.getElementById("bio-fitb-correct").textContent=bioFitbCorrectCount;
+    document.getElementById("bio-fitb-feedback").textContent="✓ Correct!";
+    document.getElementById("bio-fitb-feedback").className="fitb-feedback ok";
+  }else{
+    document.getElementById("bio-fitb-feedback").textContent="Not quite — correct answers shown above.";
+    document.getElementById("bio-fitb-feedback").className="fitb-feedback err";
+  }
+  document.getElementById("bio-fitb-next-btn").disabled=false;
+  document.getElementById("bio-fitb-hint-btn").disabled=true;
+  bioRenderFitbPips();
+}
+function bioFitbHint(){
+  bioFitbBlanks.forEach(b=>{
+    if(!b.el.disabled&&b.el.value===""){b.el.value=b.answer[0].toUpperCase();b.el.focus();}
+  });
+  document.getElementById("bio-fitb-feedback").textContent="💡 First letters revealed!";
+  document.getElementById("bio-fitb-feedback").className="fitb-feedback";
+}
+function bioFitbNext(){
+  bioFitbQIdx++;
+  if(bioFitbQIdx>=bioFitbRound.length){bioShowFitbComplete();return;}
+  bioLoadFitbQuestion();
+}
+function bioShowFitbComplete(){
+  bioRenderFitbPips();
+  const pct=Math.round((bioFitbCorrectCount/BIO_FITB_ROUND_SIZE)*100);
+  const stars=pct===100?"🌟🌟🌟":pct>=70?"⭐⭐⭐":pct>=40?"⭐⭐":"⭐";
+  document.getElementById("bio-fitb-stars").textContent=stars;
+  document.getElementById("bio-fitb-result-text").textContent=`${bioFitbCorrectCount} / ${BIO_FITB_ROUND_SIZE} correct (${pct}%). ${pct===100?"Flawless!":pct>=70?"Great work!":"Keep reviewing!"}`;
+  document.getElementById("bio-fitb-complete").classList.add("show");
+}
+
+// ── BIO KEYBOARD ──
+document.addEventListener("keydown",e=>{
+  const bioPageVisible=document.getElementById("page-bio").classList.contains("visible");
+  if(!bioPageVisible)return;
+  if(document.getElementById("bio-screen-flash").classList.contains("visible")){
+    if(e.key==="ArrowRight")bioGo(1);
+    else if(e.key==="ArrowLeft")bioGo(-1);
+    else if(e.key===" "){e.preventDefault();bioFlip();}
+  }
+  if(document.getElementById("bio-screen-fitb").classList.contains("visible")){
+    if(document.activeElement&&document.activeElement.classList.contains("fitb-blank"))return;
+    if(e.key==="Enter"&&bioFitbAnswered){e.preventDefault();bioFitbNext();}
+  }
+});
 </script>
 </body>
 </html>
