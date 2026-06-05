@@ -332,6 +332,15 @@
     .lb-subject-tab.active{background:rgba(255,215,0,0.15);border-color:rgba(255,215,0,0.4);color:#fbbf24}
     .lb-new-entry{animation:lbHighlight 1.5s ease}
     @keyframes lbHighlight{0%,100%{background:transparent}40%{background:rgba(110,231,183,0.2)}}
+    /* ── MATCH LOBBY ── */
+    .match-lobby{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.1rem;padding:3rem 1rem;text-align:center}
+    .match-lobby h3{font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--text);margin:0}
+    .match-lobby p{font-size:13px;color:var(--muted);margin:0;line-height:1.6;max-width:320px}
+    .match-lobby-btns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:0.5rem}
+    .match-play-btn{padding:11px 32px;border-radius:999px;border:none;background:linear-gradient(135deg,var(--accent2),var(--accent));color:#0b0d14;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:opacity 0.15s;display:flex;align-items:center;gap:7px}
+    .match-play-btn:hover{opacity:0.88}
+    .match-game-area{display:none}
+    .match-game-area.active{display:block}
   </style>
 </head>
 <body>
@@ -464,30 +473,40 @@
 
   <!-- ENG MATCH SCREEN -->
   <div class="screen" id="eng-screen-match">
-    <div class="match-header">
-      <div class="match-meta"><strong id="eng-match-score">0</strong> / <strong id="eng-match-total">6</strong> matched &nbsp;·&nbsp; <strong id="eng-match-mistakes">0</strong> mistakes</div>
-      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-        <div class="match-timer"><span class="timer-icon">⏱</span><span class="timer-val" id="eng-match-timer">0.0s</span></div>
+    <div class="match-lobby" id="eng-match-lobby">
+      <h3>🔗 Matching</h3>
+      <p>Match each term to its definition as fast as you can. Your time gets saved to the leaderboard!</p>
+      <div class="match-lobby-btns">
+        <button class="match-play-btn" onclick="engStartMatch()">▶ Play</button>
         <button class="lb-btn" onclick="toggleLb('eng')">🏆 Leaderboard</button>
-        <button class="match-new-btn" onclick="engNewMatchRound()">↻ New round</button>
       </div>
     </div>
-    <p class="match-instructions">Pick a term, then its matching definition</p>
-    <div class="match-columns">
-      <div>
-        <div class="match-col-header">Terms</div>
-        <div id="eng-match-terms" style="display:flex;flex-direction:column;gap:8px"></div>
+    <div class="match-game-area" id="eng-match-game">
+      <div class="match-header">
+        <div class="match-meta"><strong id="eng-match-score">0</strong> / <strong id="eng-match-total">6</strong> matched &nbsp;·&nbsp; <strong id="eng-match-mistakes">0</strong> mistakes</div>
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <div class="match-timer"><span class="timer-icon">⏱</span><span class="timer-val" id="eng-match-timer">0.0s</span></div>
+          <button class="lb-btn" onclick="toggleLb('eng')">🏆 Leaderboard</button>
+          <button class="match-new-btn" onclick="engStartMatch()">↻ New round</button>
+        </div>
       </div>
-      <div>
-        <div class="match-col-header">Definitions</div>
-        <div id="eng-match-defs" style="display:flex;flex-direction:column;gap:8px"></div>
+      <p class="match-instructions">Pick a term, then its matching definition</p>
+      <div class="match-columns">
+        <div>
+          <div class="match-col-header">Terms</div>
+          <div id="eng-match-terms" style="display:flex;flex-direction:column;gap:8px"></div>
+        </div>
+        <div>
+          <div class="match-col-header">Definitions</div>
+          <div id="eng-match-defs" style="display:flex;flex-direction:column;gap:8px"></div>
+        </div>
       </div>
-    </div>
-    <div class="match-complete" id="eng-match-complete">
-      <div class="stars" id="eng-match-stars"></div>
-      <h3>All matched!</h3>
-      <p id="eng-match-result-text"></p>
-      <button onclick="engNewMatchRound()">Play again</button>
+      <div class="match-complete" id="eng-match-complete">
+        <div class="stars" id="eng-match-stars"></div>
+        <h3>All matched!</h3>
+        <p id="eng-match-result-text"></p>
+        <button onclick="engStartMatch()">Play again</button>
+      </div>
     </div>
     <div class="lb-panel" id="lb-panel-eng"></div>
   </div>
@@ -572,30 +591,40 @@
 
   <!-- BIO MATCH SCREEN -->
   <div class="screen" id="bio-screen-match">
-    <div class="match-header">
-      <div class="match-meta"><strong id="bio-match-score">0</strong> / <strong id="bio-match-total">6</strong> matched &nbsp;·&nbsp; <strong id="bio-match-mistakes">0</strong> mistakes</div>
-      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-        <div class="match-timer"><span class="timer-icon">⏱</span><span class="timer-val" id="bio-match-timer">0.0s</span></div>
+    <div class="match-lobby" id="bio-match-lobby">
+      <h3>🔗 Matching</h3>
+      <p>Match each term to its definition as fast as you can. Your time gets saved to the leaderboard!</p>
+      <div class="match-lobby-btns">
+        <button class="match-play-btn" onclick="bioStartMatch()">▶ Play</button>
         <button class="lb-btn" onclick="toggleLb('bio')">🏆 Leaderboard</button>
-        <button class="match-new-btn" onclick="bioNewMatchRound()">↻ New round</button>
       </div>
     </div>
-    <p class="match-instructions">Pick a term, then its matching definition</p>
-    <div class="match-columns">
-      <div>
-        <div class="match-col-header">Terms</div>
-        <div id="bio-match-terms" style="display:flex;flex-direction:column;gap:8px"></div>
+    <div class="match-game-area" id="bio-match-game">
+      <div class="match-header">
+        <div class="match-meta"><strong id="bio-match-score">0</strong> / <strong id="bio-match-total">6</strong> matched &nbsp;·&nbsp; <strong id="bio-match-mistakes">0</strong> mistakes</div>
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <div class="match-timer"><span class="timer-icon">⏱</span><span class="timer-val" id="bio-match-timer">0.0s</span></div>
+          <button class="lb-btn" onclick="toggleLb('bio')">🏆 Leaderboard</button>
+          <button class="match-new-btn" onclick="bioStartMatch()">↻ New round</button>
+        </div>
       </div>
-      <div>
-        <div class="match-col-header">Definitions</div>
-        <div id="bio-match-defs" style="display:flex;flex-direction:column;gap:8px"></div>
+      <p class="match-instructions">Pick a term, then its matching definition</p>
+      <div class="match-columns">
+        <div>
+          <div class="match-col-header">Terms</div>
+          <div id="bio-match-terms" style="display:flex;flex-direction:column;gap:8px"></div>
+        </div>
+        <div>
+          <div class="match-col-header">Definitions</div>
+          <div id="bio-match-defs" style="display:flex;flex-direction:column;gap:8px"></div>
+        </div>
       </div>
-    </div>
-    <div class="match-complete" id="bio-match-complete">
-      <div class="stars" id="bio-match-stars"></div>
-      <h3>All matched!</h3>
-      <p id="bio-match-result-text"></p>
-      <button onclick="bioNewMatchRound()">Play again</button>
+      <div class="match-complete" id="bio-match-complete">
+        <div class="stars" id="bio-match-stars"></div>
+        <h3>All matched!</h3>
+        <p id="bio-match-result-text"></p>
+        <button onclick="bioStartMatch()">Play again</button>
+      </div>
     </div>
     <div class="lb-panel" id="lb-panel-bio"></div>
   </div>
@@ -680,30 +709,40 @@
 
   <!-- FR MATCH SCREEN -->
   <div class="screen" id="fr-screen-match">
-    <div class="match-header">
-      <div class="match-meta"><strong id="fr-match-score">0</strong> / <strong id="fr-match-total">6</strong> matched &nbsp;·&nbsp; <strong id="fr-match-mistakes">0</strong> mistakes</div>
-      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-        <div class="match-timer"><span class="timer-icon">⏱</span><span class="timer-val" id="fr-match-timer">0.0s</span></div>
+    <div class="match-lobby" id="fr-match-lobby">
+      <h3>🔗 Matching</h3>
+      <p>Match each term to its definition as fast as you can. Your time gets saved to the leaderboard!</p>
+      <div class="match-lobby-btns">
+        <button class="match-play-btn" onclick="frStartMatch()">▶ Play</button>
         <button class="lb-btn" onclick="toggleLb('fr')">🏆 Leaderboard</button>
-        <button class="match-new-btn" onclick="frNewMatchRound()">↻ New round</button>
       </div>
     </div>
-    <p class="match-instructions">Pick a term, then its matching definition</p>
-    <div class="match-columns">
-      <div>
-        <div class="match-col-header">Terms</div>
-        <div id="fr-match-terms" style="display:flex;flex-direction:column;gap:8px"></div>
+    <div class="match-game-area" id="fr-match-game">
+      <div class="match-header">
+        <div class="match-meta"><strong id="fr-match-score">0</strong> / <strong id="fr-match-total">6</strong> matched &nbsp;·&nbsp; <strong id="fr-match-mistakes">0</strong> mistakes</div>
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <div class="match-timer"><span class="timer-icon">⏱</span><span class="timer-val" id="fr-match-timer">0.0s</span></div>
+          <button class="lb-btn" onclick="toggleLb('fr')">🏆 Leaderboard</button>
+          <button class="match-new-btn" onclick="frStartMatch()">↻ New round</button>
+        </div>
       </div>
-      <div>
-        <div class="match-col-header">Definitions</div>
-        <div id="fr-match-defs" style="display:flex;flex-direction:column;gap:8px"></div>
+      <p class="match-instructions">Pick a term, then its matching definition</p>
+      <div class="match-columns">
+        <div>
+          <div class="match-col-header">Terms</div>
+          <div id="fr-match-terms" style="display:flex;flex-direction:column;gap:8px"></div>
+        </div>
+        <div>
+          <div class="match-col-header">Definitions</div>
+          <div id="fr-match-defs" style="display:flex;flex-direction:column;gap:8px"></div>
+        </div>
       </div>
-    </div>
-    <div class="match-complete" id="fr-match-complete">
-      <div class="stars" id="fr-match-stars"></div>
-      <h3>All matched!</h3>
-      <p id="fr-match-result-text"></p>
-      <button onclick="frNewMatchRound()">Play again</button>
+      <div class="match-complete" id="fr-match-complete">
+        <div class="stars" id="fr-match-stars"></div>
+        <h3>All matched!</h3>
+        <p id="fr-match-result-text"></p>
+        <button onclick="frStartMatch()">Play again</button>
+      </div>
     </div>
     <div class="lb-panel" id="lb-panel-fr"></div>
   </div>
@@ -752,7 +791,16 @@
 // ══════════════════════════════════════════════════════
 // PAGE NAVIGATION
 // ══════════════════════════════════════════════════════
+function resetMatchLobby(subj){
+  const lobby=document.getElementById(subj+'-match-lobby');
+  const game=document.getElementById(subj+'-match-game');
+  if(lobby)lobby.style.display='';
+  if(game)game.classList.remove('active');
+  stopMatchTimer(subj);
+}
+
 function showPage(name){
+  ['eng','bio','fr','hist'].forEach(s=>resetMatchLobby(s));
   ['home','eng','bio','fr','hist'].forEach(p=>{
     document.getElementById('page-'+p).classList.toggle('visible',p===name);
   });
@@ -760,7 +808,6 @@ function showPage(name){
     const el=document.getElementById('nav-'+n);
     el.className='topnav-tab'+(name===n?' active-'+n:'');
   });
-  // Scroll to top
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
@@ -1057,19 +1104,22 @@ engDeck=engGetDeck();engRenderTabs();engRender();
 
 // ── ENG MODE SWITCHER ──
 function engSwitchMode(mode){
+  resetMatchLobby('eng');
   ['flash','match','fitb'].forEach(m=>{
     document.getElementById('eng-screen-'+m).classList.toggle('visible',m===mode);
     document.getElementById('eng-btn-'+m).classList.toggle('active',m===mode);
   });
-  if(mode==='match'&&!engMatchInitialised)engNewMatchRound();
+  if(mode==='match'&&!engMatchInitialised){/* lobby shown by default */}
   if(mode==='fitb'&&!engFitbInitialised)engNewFitbRound();
 }
 
 // ── ENG MATCH STATE ──
 const ENG_ROUND_SIZE=6;
 let engMatchInitialised=false,engMatchSelected=null,engMatchMatched=0,engMatchMistakes=0,engMatchPairs=[],engMatchLocked=false,engMatchPlayerName='';
-function engNewMatchRound(){
+function engStartMatch(){
   openNameModal(function(playerName){
+    document.getElementById('eng-match-lobby').style.display='none';
+    document.getElementById('eng-match-game').classList.add('active');
     engMatchPlayerName=playerName;
     engMatchInitialised=true;engMatchSelected=null;engMatchMatched=0;engMatchMistakes=0;engMatchLocked=false;
     engMatchPairs=[...ENG_MATCH_POOL].sort(()=>Math.random()-0.5).slice(0,ENG_ROUND_SIZE);
@@ -1083,6 +1133,7 @@ function engNewMatchRound(){
     startMatchTimer('eng');
   });
 }
+function engNewMatchRound(){engStartMatch();}
 function engMatchClick(el){
   if(engMatchLocked||el.classList.contains("matched"))return;
   if(engMatchSelected===el){el.classList.remove("selected");engMatchSelected=null;return;}
@@ -1326,19 +1377,22 @@ bioDeck=bioGetDeck();bioRenderTabs();bioRender();
 
 // ── BIO MODE SWITCHER ──
 function bioSwitchMode(mode){
+  resetMatchLobby('bio');
   ['flash','match','fitb'].forEach(m=>{
     document.getElementById('bio-screen-'+m).classList.toggle('visible',m===mode);
     document.getElementById('bio-btn-'+m).classList.toggle('active',m===mode);
   });
-  if(mode==='match'&&!bioMatchInitialised)bioNewMatchRound();
+  if(mode==='match'&&!bioMatchInitialised){/* lobby shown by default */}
   if(mode==='fitb'&&!bioFitbInitialised)bioNewFitbRound();
 }
 
 // ── BIO MATCH STATE ──
 const BIO_ROUND_SIZE=6;
 let bioMatchInitialised=false,bioMatchSelected=null,bioMatchMatched=0,bioMatchMistakes=0,bioMatchPairs=[],bioMatchLocked=false,bioMatchPlayerName='';
-function bioNewMatchRound(){
+function bioStartMatch(){
   openNameModal(function(playerName){
+    document.getElementById('bio-match-lobby').style.display='none';
+    document.getElementById('bio-match-game').classList.add('active');
     bioMatchPlayerName=playerName;
     bioMatchInitialised=true;bioMatchSelected=null;bioMatchMatched=0;bioMatchMistakes=0;bioMatchLocked=false;
     bioMatchPairs=[...BIO_MATCH_POOL].sort(()=>Math.random()-0.5).slice(0,BIO_ROUND_SIZE);
@@ -1352,6 +1406,7 @@ function bioNewMatchRound(){
     startMatchTimer('bio');
   });
 }
+function bioNewMatchRound(){bioStartMatch();}
 function bioMatchClick(el){
   if(bioMatchLocked||el.classList.contains("matched"))return;
   if(bioMatchSelected===el){el.classList.remove("selected");bioMatchSelected=null;return;}
@@ -1898,19 +1953,22 @@ function frRenderDots(){
 
 // ── FR MODE SWITCHER ──
 function frSwitchMode(mode){
+  resetMatchLobby('fr');
   ["flash","match","fitb"].forEach(m=>{
     document.getElementById(`fr-screen-${m}`).classList.toggle("visible",m===mode);
     document.getElementById(`fr-btn-${m}`).classList.toggle("active",m===mode);
   });
-  if(mode==="match")frNewMatchRound();
+  if(mode==="match"){/* lobby shown by default */}
   if(mode==="fitb")frNewFitbRound();
 }
 
 // ── FR MATCH ──
 const FR_ROUND_SIZE=6;
 let frMatchSelected=null,frMatchMatched=0,frMatchMistakes=0,frMatchLocked=false,frMatchPlayerName='';
-function frNewMatchRound(){
+function frStartMatch(){
   openNameModal(function(playerName){
+    document.getElementById('fr-match-lobby').style.display='none';
+    document.getElementById('fr-match-game').classList.add('active');
     frMatchPlayerName=playerName;
     frMatchSelected=null;frMatchMatched=0;frMatchMistakes=0;frMatchLocked=false;
     document.getElementById("fr-match-score").textContent=0;
@@ -1925,6 +1983,7 @@ function frNewMatchRound(){
     startMatchTimer('fr');
   });
 }
+function frNewMatchRound(){frStartMatch();}
 function frMatchClick(el){
   if(frMatchLocked||el.classList.contains("matched"))return;
   if(frMatchSelected===el){el.classList.remove("selected");frMatchSelected=null;return;}
@@ -2168,30 +2227,40 @@ document.addEventListener("keydown",e=>{
 
   <!-- HIST MATCH SCREEN -->
   <div class="screen" id="hist-screen-match">
-    <div class="match-header">
-      <div class="match-meta"><strong id="hist-match-score">0</strong> / <strong id="hist-match-total">6</strong> matched &nbsp;·&nbsp; <strong id="hist-match-mistakes">0</strong> mistakes</div>
-      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-        <div class="match-timer"><span class="timer-icon">⏱</span><span class="timer-val" id="hist-match-timer">0.0s</span></div>
+    <div class="match-lobby" id="hist-match-lobby">
+      <h3>🔗 Matching</h3>
+      <p>Match each term to its definition as fast as you can. Your time gets saved to the leaderboard!</p>
+      <div class="match-lobby-btns">
+        <button class="match-play-btn" onclick="histStartMatch()">▶ Play</button>
         <button class="lb-btn" onclick="toggleLb('hist')">🏆 Leaderboard</button>
-        <button class="match-new-btn" onclick="histNewMatchRound()">↻ New round</button>
       </div>
     </div>
-    <p class="match-instructions">Pick a term, then its matching definition</p>
-    <div class="match-columns">
-      <div>
-        <div class="match-col-header">Terms</div>
-        <div id="hist-match-terms" style="display:flex;flex-direction:column;gap:8px"></div>
+    <div class="match-game-area" id="hist-match-game">
+      <div class="match-header">
+        <div class="match-meta"><strong id="hist-match-score">0</strong> / <strong id="hist-match-total">6</strong> matched &nbsp;·&nbsp; <strong id="hist-match-mistakes">0</strong> mistakes</div>
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <div class="match-timer"><span class="timer-icon">⏱</span><span class="timer-val" id="hist-match-timer">0.0s</span></div>
+          <button class="lb-btn" onclick="toggleLb('hist')">🏆 Leaderboard</button>
+          <button class="match-new-btn" onclick="histStartMatch()">↻ New round</button>
+        </div>
       </div>
-      <div>
-        <div class="match-col-header">Definitions</div>
-        <div id="hist-match-defs" style="display:flex;flex-direction:column;gap:8px"></div>
+      <p class="match-instructions">Pick a term, then its matching definition</p>
+      <div class="match-columns">
+        <div>
+          <div class="match-col-header">Terms</div>
+          <div id="hist-match-terms" style="display:flex;flex-direction:column;gap:8px"></div>
+        </div>
+        <div>
+          <div class="match-col-header">Definitions</div>
+          <div id="hist-match-defs" style="display:flex;flex-direction:column;gap:8px"></div>
+        </div>
       </div>
-    </div>
-    <div class="match-complete" id="hist-match-complete">
-      <div class="stars" id="hist-match-stars"></div>
-      <h3>All matched!</h3>
-      <p id="hist-match-result-text"></p>
-      <button onclick="histNewMatchRound()">Play again</button>
+      <div class="match-complete" id="hist-match-complete">
+        <div class="stars" id="hist-match-stars"></div>
+        <h3>All matched!</h3>
+        <p id="hist-match-result-text"></p>
+        <button onclick="histStartMatch()">Play again</button>
+      </div>
     </div>
     <div class="lb-panel" id="lb-panel-hist"></div>
   </div>
@@ -2373,19 +2442,22 @@ function histJumpTo(i){histIdx=i;histFlipped=false;document.getElementById("hist
 
 // ── HIST MODE SWITCHER ──
 function histSwitchMode(mode){
+  resetMatchLobby('hist');
   ['flash','match','fitb'].forEach(m=>{
     document.getElementById('hist-screen-'+m).classList.toggle('visible',m===mode);
     document.getElementById('hist-btn-'+m).classList.toggle('active',m===mode);
   });
-  if(mode==='match'&&!histMatchInitialised)histNewMatchRound();
+  if(mode==='match'&&!histMatchInitialised){/* lobby shown by default */}
   if(mode==='fitb'&&!histFitbInitialised)histNewFitbRound();
 }
 
 // ── HIST MATCH STATE ──
 const HIST_ROUND_SIZE=6;
 let histMatchInitialised=false,histMatchSelected=null,histMatchMatched=0,histMatchMistakes=0,histMatchPairs=[],histMatchLocked=false,histMatchPlayerName='';
-function histNewMatchRound(){
+function histStartMatch(){
   openNameModal(function(playerName){
+    document.getElementById('hist-match-lobby').style.display='none';
+    document.getElementById('hist-match-game').classList.add('active');
     histMatchPlayerName=playerName;
     histMatchInitialised=true;histMatchSelected=null;histMatchMatched=0;histMatchMistakes=0;histMatchLocked=false;
     histMatchPairs=[...HIST_MATCH_POOL].sort(()=>Math.random()-0.5).slice(0,HIST_ROUND_SIZE);
@@ -2399,6 +2471,7 @@ function histNewMatchRound(){
     startMatchTimer('hist');
   });
 }
+function histNewMatchRound(){histStartMatch();}
 function histMatchClick(el){
   if(histMatchLocked||el.classList.contains("matched"))return;
   if(histMatchSelected===el){el.classList.remove("selected");histMatchSelected=null;return;}
