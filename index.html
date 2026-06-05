@@ -287,9 +287,62 @@
       .topnav-brand{font-size:0.95rem}
       .subject-cards{grid-template-columns:1fr}
     }
+
+    /* ── NAME MODAL ── */
+    .name-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.72);backdrop-filter:blur(6px);z-index:500;display:flex;align-items:center;justify-content:center;padding:1rem;opacity:0;pointer-events:none;transition:opacity 0.25s}
+    .name-modal-overlay.open{opacity:1;pointer-events:all}
+    .name-modal{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:2rem 2rem 1.75rem;width:100%;max-width:380px;text-align:center;box-shadow:0 24px 72px rgba(0,0,0,0.6);animation:fadeUp 0.3s ease both}
+    .name-modal h2{font-family:'Playfair Display',serif;font-size:1.35rem;margin-bottom:0.35rem;color:var(--text)}
+    .name-modal p{font-size:12.5px;color:var(--muted);margin-bottom:1.25rem;line-height:1.55}
+    .name-input{width:100%;padding:10px 14px;border-radius:10px;border:1.5px solid var(--border);background:var(--surface2);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;outline:none;transition:border-color 0.2s;text-align:center}
+    .name-input:focus{border-color:var(--accent2)}
+    .name-input.input-err{border-color:var(--red)!important}
+    .name-error{min-height:22px;font-size:12px;color:var(--red);margin-top:0.5rem;margin-bottom:0.25rem}
+    .name-modal-start{margin-top:0.9rem;width:100%;padding:11px;border-radius:999px;border:none;background:linear-gradient(135deg,var(--accent2),var(--accent));color:#0b0d14;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:opacity 0.15s}
+    .name-modal-start:hover{opacity:0.88}
+
+    /* ── MATCH TIMER ── */
+    .match-timer{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums;display:flex;align-items:center;gap:5px}
+    .match-timer .timer-icon{font-size:14px}
+    .match-timer .timer-val{color:var(--text);font-weight:600;min-width:48px}
+
+    /* ── LEADERBOARD ── */
+    .lb-btn{font-size:13px;font-weight:500;padding:7px 16px;border-radius:999px;border:1px solid rgba(255,215,0,0.3);background:rgba(255,215,0,0.07);color:#fbbf24;cursor:pointer;transition:all 0.18s;font-family:'DM Sans',sans-serif;display:flex;align-items:center;gap:5px}
+    .lb-btn:hover{background:rgba(255,215,0,0.15);border-color:rgba(255,215,0,0.55)}
+    /* hidden inline panels kept for backward compat but never shown */
+    .lb-panel{display:none!important}
+    /* ── LEADERBOARD MODAL ── */
+    .lb-modal-overlay{display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.75);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);align-items:center;justify-content:center}
+    .lb-modal-overlay.open{display:flex}
+    .lb-modal{position:relative;width:min(540px,92vw);max-height:85vh;overflow-y:auto;border-radius:20px;border:1px solid rgba(255,215,0,0.22);background:linear-gradient(155deg,#1a1a2e 0%,#12121c 100%);padding:2rem 2rem 1.75rem;box-shadow:0 32px 80px rgba(0,0,0,0.7);animation:lbModalIn 0.28s cubic-bezier(0.34,1.56,0.64,1) both}
+    @keyframes lbModalIn{from{opacity:0;transform:scale(0.88) translateY(20px)}to{opacity:1;transform:scale(1) translateY(0)}}
+    .lb-modal-close{position:absolute;top:1rem;right:1rem;width:32px;height:32px;border-radius:50%;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.06);color:var(--muted);font-size:18px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s}
+    .lb-modal-close:hover{background:rgba(255,255,255,0.12);color:var(--text)}
+    .lb-modal h4{font-family:'Playfair Display',serif;font-size:1.25rem;color:#fbbf24;margin-bottom:1.25rem;display:flex;align-items:center;gap:8px}
+    .lb-table{width:100%;border-collapse:collapse}
+    .lb-table th{font-size:10px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);padding:4px 8px;text-align:left;border-bottom:1px solid var(--border)}
+    .lb-table td{font-size:13px;padding:8px 8px;border-bottom:1px solid rgba(255,255,255,0.04);color:var(--text)}
+    .lb-table tr:last-child td{border-bottom:none}
+    .lb-table .rank-1{color:#fbbf24;font-weight:700}
+    .lb-table .rank-2{color:#d1d5db;font-weight:600}
+    .lb-table .rank-3{color:#cd7f32;font-weight:600}
+    .lb-empty{font-size:13px;color:var(--muted);text-align:center;padding:1rem 0}
+    .lb-subject-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1rem}
+    .lb-subject-tab{font-size:11.5px;font-weight:500;padding:4px 12px;border-radius:999px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s}
+    .lb-subject-tab.active{background:rgba(255,215,0,0.15);border-color:rgba(255,215,0,0.4);color:#fbbf24}
+    .lb-new-entry{animation:lbHighlight 1.5s ease}
+    @keyframes lbHighlight{0%,100%{background:transparent}40%{background:rgba(110,231,183,0.2)}}
   </style>
 </head>
 <body>
+
+<!-- LEADERBOARD MODAL -->
+<div class="lb-modal-overlay" id="lb-modal-overlay" onclick="if(event.target===this)closeLbModal()">
+  <div class="lb-modal">
+    <button class="lb-modal-close" onclick="closeLbModal()" aria-label="Close">✕</button>
+    <div id="lb-modal-body"></div>
+  </div>
+</div>
 
 <!-- TOP NAV -->
 <nav class="topnav">
@@ -413,7 +466,11 @@
   <div class="screen" id="eng-screen-match">
     <div class="match-header">
       <div class="match-meta"><strong id="eng-match-score">0</strong> / <strong id="eng-match-total">6</strong> matched &nbsp;·&nbsp; <strong id="eng-match-mistakes">0</strong> mistakes</div>
-      <button class="match-new-btn" onclick="engNewMatchRound()">↻ New round</button>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+        <div class="match-timer"><span class="timer-icon">⏱</span><span class="timer-val" id="eng-match-timer">0.0s</span></div>
+        <button class="lb-btn" onclick="toggleLb('eng')">🏆 Leaderboard</button>
+        <button class="match-new-btn" onclick="engNewMatchRound()">↻ New round</button>
+      </div>
     </div>
     <p class="match-instructions">Pick a term, then its matching definition</p>
     <div class="match-columns">
@@ -432,6 +489,7 @@
       <p id="eng-match-result-text"></p>
       <button onclick="engNewMatchRound()">Play again</button>
     </div>
+    <div class="lb-panel" id="lb-panel-eng"></div>
   </div>
 
   <!-- ENG FITB SCREEN -->
@@ -516,7 +574,11 @@
   <div class="screen" id="bio-screen-match">
     <div class="match-header">
       <div class="match-meta"><strong id="bio-match-score">0</strong> / <strong id="bio-match-total">6</strong> matched &nbsp;·&nbsp; <strong id="bio-match-mistakes">0</strong> mistakes</div>
-      <button class="match-new-btn" onclick="bioNewMatchRound()">↻ New round</button>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+        <div class="match-timer"><span class="timer-icon">⏱</span><span class="timer-val" id="bio-match-timer">0.0s</span></div>
+        <button class="lb-btn" onclick="toggleLb('bio')">🏆 Leaderboard</button>
+        <button class="match-new-btn" onclick="bioNewMatchRound()">↻ New round</button>
+      </div>
     </div>
     <p class="match-instructions">Pick a term, then its matching definition</p>
     <div class="match-columns">
@@ -535,6 +597,7 @@
       <p id="bio-match-result-text"></p>
       <button onclick="bioNewMatchRound()">Play again</button>
     </div>
+    <div class="lb-panel" id="lb-panel-bio"></div>
   </div>
 
   <!-- BIO FITB SCREEN -->
@@ -619,7 +682,11 @@
   <div class="screen" id="fr-screen-match">
     <div class="match-header">
       <div class="match-meta"><strong id="fr-match-score">0</strong> / <strong id="fr-match-total">6</strong> matched &nbsp;·&nbsp; <strong id="fr-match-mistakes">0</strong> mistakes</div>
-      <button class="match-new-btn" onclick="frNewMatchRound()">↻ New round</button>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+        <div class="match-timer"><span class="timer-icon">⏱</span><span class="timer-val" id="fr-match-timer">0.0s</span></div>
+        <button class="lb-btn" onclick="toggleLb('fr')">🏆 Leaderboard</button>
+        <button class="match-new-btn" onclick="frNewMatchRound()">↻ New round</button>
+      </div>
     </div>
     <p class="match-instructions">Pick a term, then its matching definition</p>
     <div class="match-columns">
@@ -638,6 +705,7 @@
       <p id="fr-match-result-text"></p>
       <button onclick="frNewMatchRound()">Play again</button>
     </div>
+    <div class="lb-panel" id="lb-panel-fr"></div>
   </div>
 
   <!-- FR FITB SCREEN -->
@@ -669,6 +737,17 @@
   </div>
 </div><!-- /page-fr -->
 
+<!-- NAME ENTRY MODAL -->
+<div class="name-modal-overlay" id="name-modal-overlay">
+  <div class="name-modal">
+    <h2>🏆 Enter Your Name</h2>
+    <p>Your time will be recorded on the leaderboard.<br>Keep it appropriate!</p>
+    <input class="name-input" id="name-modal-input" maxlength="20" placeholder="Your name…" autocomplete="off" spellcheck="false" onkeydown="nameModalKeydown(event)">
+    <div class="name-error" id="name-modal-error"></div>
+    <button class="name-modal-start" onclick="nameModalSubmit()">Start Game →</button>
+  </div>
+</div>
+
 <script>
 // ══════════════════════════════════════════════════════
 // PAGE NAVIGATION
@@ -683,6 +762,157 @@ function showPage(name){
   });
   // Scroll to top
   window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ══════════════════════════════════════════════════════
+// PROFANITY FILTER
+// ══════════════════════════════════════════════════════
+const BAD_WORDS=["fuck","shit","ass","bitch","cunt","dick","pussy","cock","nigger","nigga","fag","faggot","retard","bastard","whore","slut","twat","prick","damn","hell","crap","sex","rape","kill","nazi","porn","nude","naked","boob","penis","vagina","arse","asshole","jackass","douchebag","motherfucker","fucker","bullshit","wtf","stfu","idiot","stupid","dumb","moron","loser"];
+function containsBadWord(str){
+  const lower=str.toLowerCase().replace(/[^a-z0-9]/g,' ');
+  return BAD_WORDS.some(w=>lower.split(/\s+/).includes(w)||lower.includes(w));
+}
+function isValidName(name){
+  const t=name.trim();
+  if(t.length<1)return{ok:false,msg:"Please enter a name."};
+  if(t.length<2)return{ok:false,msg:"Name must be at least 2 characters."};
+  if(containsBadWord(t))return{ok:false,msg:"That name isn't appropriate — please choose another!"};
+  return{ok:true,msg:""};
+}
+
+// ══════════════════════════════════════════════════════
+// NAME MODAL
+// ══════════════════════════════════════════════════════
+let _nameCallback=null;
+function openNameModal(callback){
+  _nameCallback=callback;
+  const overlay=document.getElementById('name-modal-overlay');
+  const input=document.getElementById('name-modal-input');
+  const err=document.getElementById('name-modal-error');
+  // Pre-fill with last used name
+  const saved=localStorage.getItem('matchPlayerName')||'';
+  input.value=saved;
+  input.classList.remove('input-err');
+  err.textContent='';
+  overlay.classList.add('open');
+  setTimeout(()=>input.focus(),100);
+}
+function closeNameModal(){
+  document.getElementById('name-modal-overlay').classList.remove('open');
+}
+function nameModalSubmit(){
+  const input=document.getElementById('name-modal-input');
+  const err=document.getElementById('name-modal-error');
+  const val=input.value.trim();
+  const v=isValidName(val);
+  if(!v.ok){
+    input.classList.add('input-err');
+    err.textContent=v.msg;
+    input.focus();
+    return;
+  }
+  input.classList.remove('input-err');
+  err.textContent='';
+  localStorage.setItem('matchPlayerName',val);
+  closeNameModal();
+  if(_nameCallback)_nameCallback(val);
+}
+function nameModalKeydown(e){
+  if(e.key==='Enter')nameModalSubmit();
+}
+// Close on overlay click
+document.getElementById('name-modal-overlay').addEventListener('click',function(e){
+  if(e.target===this)closeNameModal();
+});
+
+// ══════════════════════════════════════════════════════
+// MATCH TIMER
+// ══════════════════════════════════════════════════════
+const matchTimers={};
+function startMatchTimer(subj){
+  stopMatchTimer(subj);
+  const start=Date.now();
+  const el=document.getElementById(subj+'-match-timer');
+  if(el)el.textContent='0.0s';
+  matchTimers[subj]={start,interval:setInterval(()=>{
+    const elapsed=(Date.now()-start)/1000;
+    if(el)el.textContent=elapsed.toFixed(1)+'s';
+  },100)};
+}
+function stopMatchTimer(subj){
+  if(matchTimers[subj]){clearInterval(matchTimers[subj].interval);delete matchTimers[subj];}
+}
+function getMatchElapsed(subj){
+  if(matchTimers[subj])return((Date.now()-matchTimers[subj].start)/1000);
+  return 0;
+}
+
+// ══════════════════════════════════════════════════════
+// LEADERBOARD
+// ══════════════════════════════════════════════════════
+const LB_SUBJECTS={eng:'📖 English',bio:'🧬 Biology',fr:'🇫🇷 French',hist:'🏛️ History'};
+const LB_TOP=5;
+
+function lbLoad(subj){
+  try{return JSON.parse(localStorage.getItem('lb_'+subj)||'[]');}catch{return[];}
+}
+function lbSave(subj,data){localStorage.setItem('lb_'+subj,JSON.stringify(data));}
+
+function lbAddEntry(subj,name,timeMs,mistakes){
+  const entries=lbLoad(subj);
+  entries.push({name,time:timeMs,mistakes,date:new Date().toLocaleDateString()});
+  // Sort: fewest mistakes first, then fastest time
+  entries.sort((a,b)=>a.mistakes-b.mistakes||a.time-b.time);
+  const top=entries.slice(0,LB_TOP);
+  lbSave(subj,top);
+  return top;
+}
+
+function lbRender(subj,highlightName){
+  const entries=lbLoad(subj);
+  const rankEmojis=['🥇','🥈','🥉','4th','5th'];
+  if(!entries.length)return`<p class="lb-empty">No scores yet — be the first!</p>`;
+  const rows=entries.map((e,i)=>{
+    const cls='rank-'+(i+1)+((e.name===highlightName&&i===0)?' lb-new-entry':'');
+    const timeStr=(e.time/1000).toFixed(1)+'s';
+    return`<tr><td class="${cls}">${rankEmojis[i]||i+1}</td><td class="${cls}">${escHtml(e.name)}</td><td>${timeStr}</td><td>${e.mistakes}</td><td style="color:var(--muted);font-size:11px">${e.date}</td></tr>`;
+  }).join('');
+  return`<table class="lb-table"><thead><tr><th>#</th><th>Name</th><th>Time</th><th>Mistakes</th><th>Date</th></tr></thead><tbody>${rows}</tbody></table>`;
+}
+
+function escHtml(s){return s.replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
+
+let _lbActiveSubj=null;
+function openLbModal(subj,highlightName){
+  _lbActiveSubj=subj;
+  const body=document.getElementById('lb-modal-body');
+  if(body)body.innerHTML=`<h4>🏆 Top ${LB_TOP} — ${LB_SUBJECTS[subj]}</h4>${lbRender(subj,highlightName)}`;
+  const overlay=document.getElementById('lb-modal-overlay');
+  if(overlay)overlay.classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+function closeLbModal(){
+  const overlay=document.getElementById('lb-modal-overlay');
+  if(overlay)overlay.classList.remove('open');
+  document.body.style.overflow='';
+}
+
+function toggleLb(subj){
+  openLbModal(subj,null);
+}
+
+function renderLbPanel(subj,highlightName){
+  // kept for compatibility — refreshes modal if open
+  if(_lbActiveSubj===subj){
+    const body=document.getElementById('lb-modal-body');
+    if(body)body.innerHTML=`<h4>🏆 Top ${LB_TOP} — ${LB_SUBJECTS[subj]}</h4>${lbRender(subj,highlightName)}`;
+  }
+}
+
+function showLbAfterComplete(subj,name,timeMs,mistakes){
+  lbAddEntry(subj,name,timeMs,mistakes);
+  openLbModal(subj,name);
 }
 
 // ══════════════════════════════════════════════════════
@@ -837,17 +1067,21 @@ function engSwitchMode(mode){
 
 // ── ENG MATCH STATE ──
 const ENG_ROUND_SIZE=6;
-let engMatchInitialised=false,engMatchSelected=null,engMatchMatched=0,engMatchMistakes=0,engMatchPairs=[],engMatchLocked=false;
+let engMatchInitialised=false,engMatchSelected=null,engMatchMatched=0,engMatchMistakes=0,engMatchPairs=[],engMatchLocked=false,engMatchPlayerName='';
 function engNewMatchRound(){
-  engMatchInitialised=true;engMatchSelected=null;engMatchMatched=0;engMatchMistakes=0;engMatchLocked=false;
-  engMatchPairs=[...ENG_MATCH_POOL].sort(()=>Math.random()-0.5).slice(0,ENG_ROUND_SIZE);
-  document.getElementById("eng-match-complete").classList.remove("show");
-  document.getElementById("eng-match-score").textContent="0";
-  document.getElementById("eng-match-total").textContent=ENG_ROUND_SIZE;
-  document.getElementById("eng-match-mistakes").textContent="0";
-  const shuffledDefs=[...engMatchPairs].sort(()=>Math.random()-0.5);
-  document.getElementById("eng-match-terms").innerHTML=engMatchPairs.map(p=>`<div class="match-tile term" data-id="${p.id}" data-type="term" onclick="engMatchClick(this)">${p.term}</div>`).join("");
-  document.getElementById("eng-match-defs").innerHTML=shuffledDefs.map(p=>`<div class="match-tile" data-id="${p.id}" data-type="def" onclick="engMatchClick(this)">${p.def}</div>`).join("");
+  openNameModal(function(playerName){
+    engMatchPlayerName=playerName;
+    engMatchInitialised=true;engMatchSelected=null;engMatchMatched=0;engMatchMistakes=0;engMatchLocked=false;
+    engMatchPairs=[...ENG_MATCH_POOL].sort(()=>Math.random()-0.5).slice(0,ENG_ROUND_SIZE);
+    document.getElementById("eng-match-complete").classList.remove("show");
+    document.getElementById("eng-match-score").textContent="0";
+    document.getElementById("eng-match-total").textContent=ENG_ROUND_SIZE;
+    document.getElementById("eng-match-mistakes").textContent="0";
+    const shuffledDefs=[...engMatchPairs].sort(()=>Math.random()-0.5);
+    document.getElementById("eng-match-terms").innerHTML=engMatchPairs.map(p=>`<div class="match-tile term" data-id="${p.id}" data-type="term" onclick="engMatchClick(this)">${p.term}</div>`).join("");
+    document.getElementById("eng-match-defs").innerHTML=shuffledDefs.map(p=>`<div class="match-tile" data-id="${p.id}" data-type="def" onclick="engMatchClick(this)">${p.def}</div>`).join("");
+    startMatchTimer('eng');
+  });
 }
 function engMatchClick(el){
   if(engMatchLocked||el.classList.contains("matched"))return;
@@ -867,10 +1101,13 @@ function engMatchClick(el){
   }
 }
 function engShowMatchComplete(){
+  const elapsed=getMatchElapsed('eng');
+  stopMatchTimer('eng');
   const stars=engMatchMistakes===0?"🌟🌟🌟":engMatchMistakes<=2?"⭐⭐⭐":engMatchMistakes<=5?"⭐⭐":"⭐";
   document.getElementById("eng-match-stars").textContent=stars;
-  document.getElementById("eng-match-result-text").textContent=`${ENG_ROUND_SIZE} pairs matched with ${engMatchMistakes} mistake${engMatchMistakes!==1?"s":""}. ${engMatchMistakes===0?"Perfect round!":engMatchMistakes<=2?"Great job!":"Keep practising!"}`;
+  document.getElementById("eng-match-result-text").textContent=`${ENG_ROUND_SIZE} pairs matched in ${elapsed.toFixed(1)}s with ${engMatchMistakes} mistake${engMatchMistakes!==1?"s":""}. ${engMatchMistakes===0?"Perfect round!":engMatchMistakes<=2?"Great job!":"Keep practising!"}`;
   document.getElementById("eng-match-complete").classList.add("show");
+  showLbAfterComplete('eng',engMatchPlayerName,elapsed*1000,engMatchMistakes);
 }
 
 
@@ -1099,17 +1336,21 @@ function bioSwitchMode(mode){
 
 // ── BIO MATCH STATE ──
 const BIO_ROUND_SIZE=6;
-let bioMatchInitialised=false,bioMatchSelected=null,bioMatchMatched=0,bioMatchMistakes=0,bioMatchPairs=[],bioMatchLocked=false;
+let bioMatchInitialised=false,bioMatchSelected=null,bioMatchMatched=0,bioMatchMistakes=0,bioMatchPairs=[],bioMatchLocked=false,bioMatchPlayerName='';
 function bioNewMatchRound(){
-  bioMatchInitialised=true;bioMatchSelected=null;bioMatchMatched=0;bioMatchMistakes=0;bioMatchLocked=false;
-  bioMatchPairs=[...BIO_MATCH_POOL].sort(()=>Math.random()-0.5).slice(0,BIO_ROUND_SIZE);
-  document.getElementById("bio-match-complete").classList.remove("show");
-  document.getElementById("bio-match-score").textContent="0";
-  document.getElementById("bio-match-total").textContent=BIO_ROUND_SIZE;
-  document.getElementById("bio-match-mistakes").textContent="0";
-  const shuffledDefs=[...bioMatchPairs].sort(()=>Math.random()-0.5);
-  document.getElementById("bio-match-terms").innerHTML=bioMatchPairs.map(p=>`<div class="match-tile term" data-id="${p.id}" data-type="term" onclick="bioMatchClick(this)">${p.term}</div>`).join("");
-  document.getElementById("bio-match-defs").innerHTML=shuffledDefs.map(p=>`<div class="match-tile" data-id="${p.id}" data-type="def" onclick="bioMatchClick(this)">${p.def}</div>`).join("");
+  openNameModal(function(playerName){
+    bioMatchPlayerName=playerName;
+    bioMatchInitialised=true;bioMatchSelected=null;bioMatchMatched=0;bioMatchMistakes=0;bioMatchLocked=false;
+    bioMatchPairs=[...BIO_MATCH_POOL].sort(()=>Math.random()-0.5).slice(0,BIO_ROUND_SIZE);
+    document.getElementById("bio-match-complete").classList.remove("show");
+    document.getElementById("bio-match-score").textContent="0";
+    document.getElementById("bio-match-total").textContent=BIO_ROUND_SIZE;
+    document.getElementById("bio-match-mistakes").textContent="0";
+    const shuffledDefs=[...bioMatchPairs].sort(()=>Math.random()-0.5);
+    document.getElementById("bio-match-terms").innerHTML=bioMatchPairs.map(p=>`<div class="match-tile term" data-id="${p.id}" data-type="term" onclick="bioMatchClick(this)">${p.term}</div>`).join("");
+    document.getElementById("bio-match-defs").innerHTML=shuffledDefs.map(p=>`<div class="match-tile" data-id="${p.id}" data-type="def" onclick="bioMatchClick(this)">${p.def}</div>`).join("");
+    startMatchTimer('bio');
+  });
 }
 function bioMatchClick(el){
   if(bioMatchLocked||el.classList.contains("matched"))return;
@@ -1129,10 +1370,13 @@ function bioMatchClick(el){
   }
 }
 function bioShowMatchComplete(){
+  const elapsed=getMatchElapsed('bio');
+  stopMatchTimer('bio');
   const stars=bioMatchMistakes===0?"🌟🌟🌟":bioMatchMistakes<=2?"⭐⭐⭐":bioMatchMistakes<=5?"⭐⭐":"⭐";
   document.getElementById("bio-match-stars").textContent=stars;
-  document.getElementById("bio-match-result-text").textContent=`${BIO_ROUND_SIZE} pairs matched with ${bioMatchMistakes} mistake${bioMatchMistakes!==1?"s":""}. ${bioMatchMistakes===0?"Perfect round!":bioMatchMistakes<=2?"Great job!":"Keep practising!"}`;
+  document.getElementById("bio-match-result-text").textContent=`${BIO_ROUND_SIZE} pairs matched in ${elapsed.toFixed(1)}s with ${bioMatchMistakes} mistake${bioMatchMistakes!==1?"s":""}. ${bioMatchMistakes===0?"Perfect round!":bioMatchMistakes<=2?"Great job!":"Keep practising!"}`;
   document.getElementById("bio-match-complete").classList.add("show");
+  showLbAfterComplete('bio',bioMatchPlayerName,elapsed*1000,bioMatchMistakes);
 }
 
 // ── ENG FITB BANK ──
@@ -1664,18 +1908,22 @@ function frSwitchMode(mode){
 
 // ── FR MATCH ──
 const FR_ROUND_SIZE=6;
-let frMatchSelected=null,frMatchMatched=0,frMatchMistakes=0,frMatchLocked=false;
+let frMatchSelected=null,frMatchMatched=0,frMatchMistakes=0,frMatchLocked=false,frMatchPlayerName='';
 function frNewMatchRound(){
-  frMatchSelected=null;frMatchMatched=0;frMatchMistakes=0;frMatchLocked=false;
-  document.getElementById("fr-match-score").textContent=0;
-  document.getElementById("fr-match-mistakes").textContent=0;
-  document.getElementById("fr-match-total").textContent=FR_ROUND_SIZE;
-  document.getElementById("fr-match-complete").classList.remove("show");
-  const pool=[...FR_MATCH_POOL].sort(()=>Math.random()-0.5).slice(0,FR_ROUND_SIZE);
-  const terms=[...pool].sort(()=>Math.random()-0.5);
-  const defs=[...pool].sort(()=>Math.random()-0.5);
-  document.getElementById("fr-match-terms").innerHTML=terms.map(p=>`<div class="match-tile term" data-id="${p.id}" data-type="term" onclick="frMatchClick(this)">${p.term}</div>`).join("");
-  document.getElementById("fr-match-defs").innerHTML=defs.map(p=>`<div class="match-tile" data-id="${p.id}" data-type="def" onclick="frMatchClick(this)">${p.def}</div>`).join("");
+  openNameModal(function(playerName){
+    frMatchPlayerName=playerName;
+    frMatchSelected=null;frMatchMatched=0;frMatchMistakes=0;frMatchLocked=false;
+    document.getElementById("fr-match-score").textContent=0;
+    document.getElementById("fr-match-mistakes").textContent=0;
+    document.getElementById("fr-match-total").textContent=FR_ROUND_SIZE;
+    document.getElementById("fr-match-complete").classList.remove("show");
+    const pool=[...FR_MATCH_POOL].sort(()=>Math.random()-0.5).slice(0,FR_ROUND_SIZE);
+    const terms=[...pool].sort(()=>Math.random()-0.5);
+    const defs=[...pool].sort(()=>Math.random()-0.5);
+    document.getElementById("fr-match-terms").innerHTML=terms.map(p=>`<div class="match-tile term" data-id="${p.id}" data-type="term" onclick="frMatchClick(this)">${p.term}</div>`).join("");
+    document.getElementById("fr-match-defs").innerHTML=defs.map(p=>`<div class="match-tile" data-id="${p.id}" data-type="def" onclick="frMatchClick(this)">${p.def}</div>`).join("");
+    startMatchTimer('fr');
+  });
 }
 function frMatchClick(el){
   if(frMatchLocked||el.classList.contains("matched"))return;
@@ -1695,10 +1943,13 @@ function frMatchClick(el){
   }
 }
 function frShowMatchComplete(){
+  const elapsed=getMatchElapsed('fr');
+  stopMatchTimer('fr');
   const stars=frMatchMistakes===0?"🌟🌟🌟":frMatchMistakes<=2?"⭐⭐⭐":frMatchMistakes<=5?"⭐⭐":"⭐";
   document.getElementById("fr-match-stars").textContent=stars;
-  document.getElementById("fr-match-result-text").textContent=`${FR_ROUND_SIZE} pairs matched with ${frMatchMistakes} mistake${frMatchMistakes!==1?"s":""}. ${frMatchMistakes===0?"Perfect round!":frMatchMistakes<=2?"Très bien !":"Continuez à pratiquer !"}`;
+  document.getElementById("fr-match-result-text").textContent=`${FR_ROUND_SIZE} pairs matched in ${elapsed.toFixed(1)}s with ${frMatchMistakes} mistake${frMatchMistakes!==1?"s":""}. ${frMatchMistakes===0?"Perfect round!":frMatchMistakes<=2?"Très bien !":"Continuez à pratiquer !"}`;
   document.getElementById("fr-match-complete").classList.add("show");
+  showLbAfterComplete('fr',frMatchPlayerName,elapsed*1000,frMatchMistakes);
 }
 
 // ── FR FITB ──
@@ -1861,7 +2112,6 @@ document.addEventListener("keydown",e=>{
   frDeck=frGetDeck();
   frRenderTabs();
   frRender();
-  frNewMatchRound();
   frNewFitbRound();
 })();
 </script>
@@ -1920,7 +2170,11 @@ document.addEventListener("keydown",e=>{
   <div class="screen" id="hist-screen-match">
     <div class="match-header">
       <div class="match-meta"><strong id="hist-match-score">0</strong> / <strong id="hist-match-total">6</strong> matched &nbsp;·&nbsp; <strong id="hist-match-mistakes">0</strong> mistakes</div>
-      <button class="match-new-btn" onclick="histNewMatchRound()">↻ New round</button>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+        <div class="match-timer"><span class="timer-icon">⏱</span><span class="timer-val" id="hist-match-timer">0.0s</span></div>
+        <button class="lb-btn" onclick="toggleLb('hist')">🏆 Leaderboard</button>
+        <button class="match-new-btn" onclick="histNewMatchRound()">↻ New round</button>
+      </div>
     </div>
     <p class="match-instructions">Pick a term, then its matching definition</p>
     <div class="match-columns">
@@ -1939,6 +2193,7 @@ document.addEventListener("keydown",e=>{
       <p id="hist-match-result-text"></p>
       <button onclick="histNewMatchRound()">Play again</button>
     </div>
+    <div class="lb-panel" id="lb-panel-hist"></div>
   </div>
 
   <!-- HIST FITB SCREEN -->
@@ -2128,17 +2383,21 @@ function histSwitchMode(mode){
 
 // ── HIST MATCH STATE ──
 const HIST_ROUND_SIZE=6;
-let histMatchInitialised=false,histMatchSelected=null,histMatchMatched=0,histMatchMistakes=0,histMatchPairs=[],histMatchLocked=false;
+let histMatchInitialised=false,histMatchSelected=null,histMatchMatched=0,histMatchMistakes=0,histMatchPairs=[],histMatchLocked=false,histMatchPlayerName='';
 function histNewMatchRound(){
-  histMatchInitialised=true;histMatchSelected=null;histMatchMatched=0;histMatchMistakes=0;histMatchLocked=false;
-  histMatchPairs=[...HIST_MATCH_POOL].sort(()=>Math.random()-0.5).slice(0,HIST_ROUND_SIZE);
-  document.getElementById("hist-match-complete").classList.remove("show");
-  document.getElementById("hist-match-score").textContent="0";
-  document.getElementById("hist-match-total").textContent=HIST_ROUND_SIZE;
-  document.getElementById("hist-match-mistakes").textContent="0";
-  const shuffledDefs=[...histMatchPairs].sort(()=>Math.random()-0.5);
-  document.getElementById("hist-match-terms").innerHTML=histMatchPairs.map(p=>`<div class="match-tile term" data-id="${p.id}" data-type="term" onclick="histMatchClick(this)">${p.term}</div>`).join("");
-  document.getElementById("hist-match-defs").innerHTML=shuffledDefs.map(p=>`<div class="match-tile" data-id="${p.id}" data-type="def" onclick="histMatchClick(this)">${p.def}</div>`).join("");
+  openNameModal(function(playerName){
+    histMatchPlayerName=playerName;
+    histMatchInitialised=true;histMatchSelected=null;histMatchMatched=0;histMatchMistakes=0;histMatchLocked=false;
+    histMatchPairs=[...HIST_MATCH_POOL].sort(()=>Math.random()-0.5).slice(0,HIST_ROUND_SIZE);
+    document.getElementById("hist-match-complete").classList.remove("show");
+    document.getElementById("hist-match-score").textContent="0";
+    document.getElementById("hist-match-total").textContent=HIST_ROUND_SIZE;
+    document.getElementById("hist-match-mistakes").textContent="0";
+    const shuffledDefs=[...histMatchPairs].sort(()=>Math.random()-0.5);
+    document.getElementById("hist-match-terms").innerHTML=histMatchPairs.map(p=>`<div class="match-tile term" data-id="${p.id}" data-type="term" onclick="histMatchClick(this)">${p.term}</div>`).join("");
+    document.getElementById("hist-match-defs").innerHTML=shuffledDefs.map(p=>`<div class="match-tile" data-id="${p.id}" data-type="def" onclick="histMatchClick(this)">${p.def}</div>`).join("");
+    startMatchTimer('hist');
+  });
 }
 function histMatchClick(el){
   if(histMatchLocked||el.classList.contains("matched"))return;
@@ -2158,10 +2417,13 @@ function histMatchClick(el){
   }
 }
 function histShowMatchComplete(){
+  const elapsed=getMatchElapsed('hist');
+  stopMatchTimer('hist');
   const stars=histMatchMistakes===0?"🌟🌟🌟":histMatchMistakes<=2?"⭐⭐⭐":histMatchMistakes<=5?"⭐⭐":"⭐";
   document.getElementById("hist-match-stars").textContent=stars;
-  document.getElementById("hist-match-result-text").textContent=`${HIST_ROUND_SIZE} / ${HIST_ROUND_SIZE} matched with ${histMatchMistakes} mistake${histMatchMistakes===1?"":"s"}.`;
+  document.getElementById("hist-match-result-text").textContent=`${HIST_ROUND_SIZE} pairs matched in ${elapsed.toFixed(1)}s with ${histMatchMistakes} mistake${histMatchMistakes===1?"":"s"}.`;
   document.getElementById("hist-match-complete").classList.add("show");
+  showLbAfterComplete('hist',histMatchPlayerName,elapsed*1000,histMatchMistakes);
 }
 
 // ── HIST FITB STATE ──
@@ -2320,9 +2582,10 @@ document.addEventListener("keydown",e=>{
   histDeck=histGetDeck();
   histRenderTabs();
   histRender();
-  histNewMatchRound();
   histNewFitbRound();
 })();
+// Close leaderboard modal on Escape
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeLbModal();});
 </script>
 
 </body></html>
