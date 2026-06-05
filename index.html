@@ -261,6 +261,23 @@
     .fitb-complete h3{font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--amber);margin-bottom:0.5rem}
     .fitb-complete p{font-size:13px;color:var(--muted);margin-bottom:1.25rem}
 
+    /* History colour overrides */
+    .subject-card.hist{background:linear-gradient(145deg,#0d0f18,#0f1120)}
+    .subject-card:hover.hist{box-shadow:0 16px 48px rgba(52,211,153,0.15)}
+    .sc-title.hist{color:#34d399}
+    .topnav-tab.active-hist{background:linear-gradient(135deg,rgba(52,211,153,0.25),rgba(6,182,212,0.15));border-color:rgba(52,211,153,0.4);color:#34d399}
+    .page-hist{--accent:#34d399;--accent2:#06b6d4}
+    .page-hist .subj-eyebrow{color:var(--accent)}
+    .page-hist .subj-h1{background:linear-gradient(135deg,var(--text) 40%,var(--accent) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .page-hist .mode-btn.active{background:linear-gradient(135deg,#34d399,#059669)}
+    .page-hist .tab.active{background:#34d399;border-color:#34d399;color:#0b0d14}
+    .page-hist .card-face.back{background:linear-gradient(145deg,#0e1e18,#0a1f1a)}
+    .page-hist .dot.current{background:var(--accent);width:20px;border-radius:4px}
+    .page-hist .done-banner{background:linear-gradient(135deg,rgba(52,211,153,0.12),rgba(6,182,212,0.12));border:1px solid rgba(52,211,153,0.25)}
+    .page-hist .done-banner h3{color:var(--accent)}
+    .page-hist .match-tile.selected{border-color:#34d399;background:rgba(52,211,153,0.18);transform:translateY(-2px);box-shadow:0 0 0 3px rgba(52,211,153,0.25)}
+    .page-hist .fitb-btn.primary{background:linear-gradient(135deg,#34d399,#059669)}
+
     @media(max-width:480px){
       .card-face{padding:1.75rem 1.5rem}
       .toolbar{flex-direction:column;align-items:flex-start}
@@ -281,6 +298,7 @@
     <button class="topnav-tab" id="nav-eng" onclick="showPage('eng')">📖 English</button>
     <button class="topnav-tab" id="nav-bio" onclick="showPage('bio')">🧬 Biology</button>
     <button class="topnav-tab" id="nav-fr" onclick="showPage('fr')"><svg width="18" height="13" viewBox="0 0 18 13" style="border-radius:2px;vertical-align:middle;margin-right:5px" xmlns="http://www.w3.org/2000/svg"><rect width="6" height="13" fill="#002395"/><rect x="6" width="6" height="13" fill="#fff"/><rect x="12" width="6" height="13" fill="#ED2939"/></svg>French</button>
+    <button class="topnav-tab" id="nav-hist" onclick="showPage('hist')">🏛️ History</button>
   </div>
 </nav>
 
@@ -321,6 +339,17 @@
       <div class="sc-icon"><svg width="36" height="26" viewBox="0 0 36 26" style="border-radius:3px" xmlns="http://www.w3.org/2000/svg"><rect width="12" height="26" fill="#002395"/><rect x="12" width="12" height="26" fill="#fff"/><rect x="24" width="12" height="26" fill="#ED2939"/></svg></div>
       <div class="sc-title fr">French</div>
       <div class="sc-desc">Passé composé avec avoir, hotel &amp; restaurant vocabulary, and dialogue writing. 57 cards.</div>
+      <div class="sc-tags">
+        <span class="sc-tag">🃏 Flashcards</span>
+        <span class="sc-tag">🔗 Match</span>
+        <span class="sc-tag">✏️ Fill in the Blank</span>
+      </div>
+    </div>
+    <div class="subject-card hist" onclick="showPage('hist')">
+      <span class="sc-arrow">↗</span>
+      <div class="sc-icon">🏛️</div>
+      <div class="sc-title hist">History</div>
+      <div class="sc-desc">Age of Extremism: WWI, Russian Revolution, Interwar Period, WWII, and the Cold War. 50 cards.</div>
       <div class="sc-tags">
         <span class="sc-tag">🃏 Flashcards</span>
         <span class="sc-tag">🔗 Match</span>
@@ -645,10 +674,10 @@
 // PAGE NAVIGATION
 // ══════════════════════════════════════════════════════
 function showPage(name){
-  ['home','eng','bio','fr'].forEach(p=>{
+  ['home','eng','bio','fr','hist'].forEach(p=>{
     document.getElementById('page-'+p).classList.toggle('visible',p===name);
   });
-  ['eng','bio','fr'].forEach(n=>{
+  ['eng','bio','fr','hist'].forEach(n=>{
     const el=document.getElementById('nav-'+n);
     el.className='topnav-tab'+(name===n?' active-'+n:'');
   });
@@ -1837,5 +1866,463 @@ document.addEventListener("keydown",e=>{
 })();
 </script>
 
+
+<!-- ══════════════════════════════════════
+     HISTORY PAGE
+══════════════════════════════════════ -->
+<div class="page page-hist" id="page-hist">
+  <header class="subj-header">
+    <div class="subj-eyebrow">Study Tool</div>
+    <h1 class="subj-h1">Grade 9 History</h1>
+    <p class="subj-sub">Age of Extremism: WWI, Russian Revolution, Interwar Period, WWII &amp; Cold War · 50 cards</p>
+  </header>
+  <div class="mode-switcher">
+    <button class="mode-btn active" id="hist-btn-flash" onclick="histSwitchMode('flash')">🃏 Flashcards</button>
+    <button class="mode-btn" id="hist-btn-match" onclick="histSwitchMode('match')">🔗 Match</button>
+    <button class="mode-btn" id="hist-btn-fitb" onclick="histSwitchMode('fitb')">✏️ Fill in the Blank</button>
+  </div>
+
+  <!-- HIST FLASHCARD SCREEN -->
+  <div class="screen visible" id="hist-screen-flash">
+    <div class="toolbar">
+      <div class="tabs" id="hist-tabs"></div>
+      <div class="right-tools">
+        <button class="shuffle-btn" onclick="histShuffle()">⇄ Shuffle</button>
+        <span class="progress" id="hist-prog">1 / 50</span>
+      </div>
+    </div>
+    <div class="card-area">
+      <div class="card-wrap" id="hist-card" onclick="histFlip()">
+        <div class="card-face front">
+          <div class="card-label">Question</div>
+          <div class="card-q" id="hist-q-text"></div>
+          <div class="card-category" id="hist-q-cat"></div>
+        </div>
+        <div class="card-face back">
+          <div class="card-label">Answer</div>
+          <div class="card-a" id="hist-a-text"></div>
+        </div>
+      </div>
+    </div>
+    <p class="flip-hint">Tap to flip <span>·</span> ← → arrow keys <span>·</span> Space to flip</p>
+    <div class="nav-row">
+      <button class="nav-btn" id="hist-prev-btn" onclick="histGo(-1)" disabled>← Prev</button>
+      <button class="nav-btn" id="hist-next-btn" onclick="histGo(1)">Next →</button>
+    </div>
+    <div class="dot-row" id="hist-dots"></div>
+    <div class="done-banner" id="hist-done">
+      <h3>🎉 Deck complete!</h3>
+      <p>You've gone through all the cards. Shuffle for another round.</p>
+    </div>
+  </div>
+
+  <!-- HIST MATCH SCREEN -->
+  <div class="screen" id="hist-screen-match">
+    <div class="match-header">
+      <div class="match-meta"><strong id="hist-match-score">0</strong> / <strong id="hist-match-total">6</strong> matched &nbsp;·&nbsp; <strong id="hist-match-mistakes">0</strong> mistakes</div>
+      <button class="match-new-btn" onclick="histNewMatchRound()">↻ New round</button>
+    </div>
+    <p class="match-instructions">Pick a term, then its matching definition</p>
+    <div class="match-columns">
+      <div>
+        <div class="match-col-header">Terms</div>
+        <div id="hist-match-terms" style="display:flex;flex-direction:column;gap:8px"></div>
+      </div>
+      <div>
+        <div class="match-col-header">Definitions</div>
+        <div id="hist-match-defs" style="display:flex;flex-direction:column;gap:8px"></div>
+      </div>
+    </div>
+    <div class="match-complete" id="hist-match-complete">
+      <div class="stars" id="hist-match-stars"></div>
+      <h3>All matched!</h3>
+      <p id="hist-match-result-text"></p>
+      <button onclick="histNewMatchRound()">Play again</button>
+    </div>
+  </div>
+
+  <!-- HIST FITB SCREEN -->
+  <div class="screen" id="hist-screen-fitb">
+    <div class="fitb-header">
+      <div class="fitb-meta">Question <strong id="hist-fitb-idx">1</strong> of <strong id="hist-fitb-total">10</strong> &nbsp;·&nbsp; <strong id="hist-fitb-correct">0</strong> correct</div>
+      <button class="fitb-new-btn" onclick="histNewFitbRound()">↻ New round</button>
+    </div>
+    <div class="fitb-progress-row" id="hist-fitb-pips"></div>
+    <div class="fitb-card" id="hist-fitb-card">
+      <div class="fitb-topic" id="hist-fitb-topic"></div>
+      <div class="fitb-sentence" id="hist-fitb-sentence"></div>
+    </div>
+    <div class="fitb-word-bank" id="hist-fitb-bank-wrap">
+      <div class="fitb-bank-label">Word bank · <kbd>← →</kbd> navigate &nbsp;·&nbsp; <kbd>Space</kbd> select &nbsp;·&nbsp; <kbd>Tab</kbd> switch blank &nbsp;·&nbsp; <kbd>Enter</kbd> next question</div>
+      <div class="fitb-chips" id="hist-fitb-chips"></div>
+    </div>
+    <div class="fitb-feedback" id="hist-fitb-feedback"></div>
+    <div class="fitb-actions">
+      <button class="fitb-btn" id="hist-fitb-hint-btn" onclick="histFitbHint()">💡 Hint</button>
+      <button class="fitb-btn primary" id="hist-fitb-next-btn" onclick="histFitbNext()" disabled>Next →</button>
+    </div>
+    <div class="fitb-complete" id="hist-fitb-complete">
+      <div class="stars" id="hist-fitb-stars"></div>
+      <h3>Round complete!</h3>
+      <p id="hist-fitb-result-text"></p>
+      <button onclick="histNewFitbRound()">Play again</button>
+    </div>
+  </div>
+</div><!-- /page-hist -->
+
+<script>
+// ══════════════════════════════════════════════════════
+// HISTORY DATA
+// ══════════════════════════════════════════════════════
+const HIST_ALL=[
+  // ── WWI ──
+  {cat:"WWI",q:"What does MAIN stand for?",a:"Militarism, Alliances, Imperialism, Nationalism — the four main causes of WWI."},
+  {cat:"WWI",q:"Why did WWI last so long?",a:"Trench warfare created a stalemate. Machine guns, barbed wire, and artillery all favoured defence. Neither side could break through until the US joined in 1917."},
+  {cat:"WWI",q:"Why did the Russian Revolution happen?",a:"Russia suffered massive losses and food shortages in WWI. The tsar was seen as incompetent. Workers and soldiers were exhausted. Lenin's Bolsheviks promised 'Peace, Land, Bread.'"},
+  {cat:"WWI",q:"What was the impact of the Russian Revolution on WWI?",a:"Russia signed the Treaty of Brest-Litovsk (1918) and left WWI, freeing Germany's eastern front. Russia became the world's first communist state."},
+  // ── Interwar Period ──
+  {cat:"Interwar Period",q:"Why did the great powers disagree about the Treaty of Versailles?",a:"France wanted to cripple Germany. Britain wanted Germany punished but not destroyed. The USA (Wilson) wanted a fair peace based on the Fourteen Points."},
+  {cat:"Interwar Period",q:"What were the consequences of Germany's treatment at Versailles?",a:"Germany lost territory, paid £6.6 billion in reparations, army cut to 100,000, and was humiliated by the War Guilt Clause — fuelling resentment and Hitler's rise."},
+  {cat:"Interwar Period",q:"Why did the Great Depression happen?",a:"The US stock market crashed in 1929. Banks failed, unemployment soared, and US loans to Europe were recalled — collapsing economies worldwide."},
+  {cat:"Interwar Period",q:"Why were Italy and Japan unhappy with the Treaty of Versailles?",a:"Italy felt cheated — it got little land despite switching to the Allies ('mutilated victory'). Japan felt disrespected and ignored by Western powers."},
+  {cat:"Interwar Period",q:"Why did Fascism rise?",a:"It offered strong leadership, national pride, and scapegoats. It opposed communism, exploited economic misery and post-war humiliation (especially in Italy and Germany)."},
+  {cat:"Interwar Period",q:"What is Fascism and how does it differ from Communism?",a:"Fascism = far-right, nationalist, supports capitalism under a strong state. Communism = far-left, abolishes private property, aims for a classless society. Both are authoritarian."},
+  {cat:"Interwar Period",q:"What is Nationalism and how did it cause WWI?",a:"Belief that one's nation should be self-governing. Serbian nationalism threatened Austria-Hungary. The assassination of Archduke Franz Ferdinand by a Serbian nationalist triggered WWI."},
+  {cat:"Interwar Period",q:"What is Communism and why did it emerge after WWI?",a:"Workers seize power, abolish private property, create a classless society. Emerged because WWI exposed capitalism's failures and Russia's extreme inequality made revolution possible."},
+  // ── WWII ──
+  {cat:"WWII",q:"What caused WWII to start?",a:"Germany invaded Poland on 1 Sept 1939 → Britain and France declared war. Hitler was emboldened by years of appeasement. The Nazi-Soviet Pact let him attack west without fear of the east."},
+  {cat:"WWII",q:"Why did no one stop Germany or Japan earlier?",a:"Appeasement — leaders hoped concessions would satisfy Hitler. The League of Nations had no army. Democracies were unprepared for war and feared communism more than fascism."},
+  {cat:"WWII",q:"What were the consequences of Axis powers advancing?",a:"Germany occupied most of Europe and North Africa. Japan seized Southeast Asia and Pacific islands. Millions of civilians were killed or enslaved; the Holocaust began."},
+  {cat:"WWII",q:"Why did the war turn against the Axis?",a:"Stalingrad (1943) stopped Germany in the East. El Alamein (1942) stopped Rommel in Africa. Midway (1942) halted Japan in the Pacific. Over-extended supply lines and Allied coordination turned the tide."},
+  {cat:"WWII",q:"How did each Axis power lose?",a:"Italy: Allied invasion → Mussolini fell 1943. Germany: two-front war (D-Day from west + USSR from east) → surrendered May 1945. Japan: atomic bombs on Hiroshima & Nagasaki → surrendered Sept 1945."},
+  {cat:"WWII",q:"What was the Holocaust?",a:"Nazi Germany's systematic genocide of 6 million Jews and millions of others (Roma, disabled, political opponents). The most extreme consequence of fascist racism and unchecked authoritarian power."},
+  {cat:"WWII",q:"Why was D-Day (June 6, 1944) significant?",a:"It opened a second front in Western Europe. Germany was now fighting on two fronts simultaneously — East (USSR) and West (Allies) — stretching its forces until collapse."},
+  // ── Cold War ──
+  {cat:"Cold War",q:"Why did the Cold War start?",a:"The US (democratic capitalism) and USSR (authoritarian communism) emerged as rival superpowers. The USSR spread communism in Eastern Europe; the US responded with containment. Nuclear weapons made direct war too dangerous."},
+  {cat:"Cold War",q:"Why was China becoming communist in 1949 a problem?",a:"The world's most populous country joined the communist bloc. It confirmed domino theory fears and made the US more aggressive in Korea and Vietnam to stop further communist expansion."},
+  {cat:"Cold War",q:"How was the Cold War fought through ideology?",a:"Both sides used propaganda, radio broadcasts, funded political parties, and backed coups to install friendly governments. The US promoted capitalism; the USSR promoted communist revolution."},
+  {cat:"Cold War",q:"What are proxy wars? Give an example.",a:"Conflicts where the US and USSR back opposing sides without fighting directly. Example: Korean War (1950–53) — US backed South Korea vs. Soviet/Chinese-backed North Korea."},
+  {cat:"Cold War",q:"What was the Space Race?",a:"US vs. USSR competition in space to prove ideological superiority. USSR: Sputnik (1957), Gagarin in space (1961). USA: Moon landing (1969). It showed whose system could achieve more."},
+  {cat:"Cold War",q:"What was the Arms Race?",a:"Both superpowers built massive nuclear stockpiles. MAD (Mutually Assured Destruction) meant neither side dared attack — any nuclear war would destroy both. It was expensive and terrifying."},
+  {cat:"Cold War",q:"What happened during Détente?",a:"1970s relaxation of tensions. Nixon visited China and signed SALT I with the USSR. Both sides recognised the arms race was ruinous and agreed coexistence was necessary."},
+  {cat:"Cold War",q:"Why did the Soviet Union collapse (1991)?",a:"Planned economy failed to compete with capitalism. Arms race was bankrupting the USSR. Gorbachev's glasnost and perestroika loosened control. Eastern Europe broke free in 1989. The union dissolved."},
+  {cat:"Cold War",q:"Why did Communism collapse?",a:"Central planning caused shortages and inefficiency. Political repression alienated people. Citizens could see Western living standards were higher. By 1991 every European communist state had abandoned the system."},
+  {cat:"Cold War",q:"What was the Berlin Wall and why was it significant?",a:"Built in 1961 to stop East Germans fleeing to the West. Symbol of the Iron Curtain. Its fall on 9 November 1989 marked the symbolic end of the Cold War."},
+  {cat:"Cold War",q:"What was the Cuban Missile Crisis (1962)?",a:"USSR placed nuclear missiles in Cuba, 90 miles from the US. For 13 days the world was on the brink of nuclear war. Kennedy blockaded Cuba; Khrushchev removed the missiles. The most dangerous moment of the Cold War."},
+  // ── Age of Extremism themes ──
+  {cat:"Age of Extremism",q:"Why do extreme ideas arise?",a:"They arise during crises — economic collapse, military defeat, or national humiliation. When mainstream institutions seem to have failed, people look for radical solutions with simple answers and strong leaders."},
+  {cat:"Age of Extremism",q:"Why do people follow extreme ideas?",a:"Extremism offers someone to blame, community, purpose, and promises of a better future. Charismatic leaders use propaganda effectively. Fear of the opposing extreme (e.g. communism → fascism) also pushes people toward extremes."},
+  {cat:"Age of Extremism",q:"What are the dangers of extremist ideas?",a:"Dehumanisation of enemies, suspension of rights, censorship, and mass violence. The Holocaust, Stalin's gulags, and WWII all resulted from unchecked extremism."},
+  {cat:"Age of Extremism",q:"Why do extremist ideas still exist today?",a:"Inequality, immigration fears, and distrust of institutions recreate the conditions. Social media amplifies extreme voices. Extremism re-emerges whenever crises go unaddressed and democratic institutions weaken."},
+  {cat:"Age of Extremism",q:"How does the unit connect WWI to the Cold War?",a:"Versailles → resentment → Fascism. Russian losses → Revolution → Communism. Fascism vs. Communism → WWII. Post-WWII: US (capitalism) vs. USSR (communism) → Cold War. It's one chain of extremist responses to previous crises."},
+  {cat:"Age of Extremism",q:"Communism vs. Democratic Capitalism — which is better and why?",a:"Democratic capitalism proved more adaptable and produced higher living standards. Communism required oppression to maintain and couldn't sustain growth. The USSR's collapse vs. Western democracies surviving is the evidence."},
+  // ── Key Figures ──
+  {cat:"Key Figures",q:"Who was Lenin?",a:"Led the Bolshevik Revolution (October 1917). Took Russia out of WWI. Won the civil war. Founded the Soviet Union — the world's first communist state."},
+  {cat:"Key Figures",q:"Who was Stalin?",a:"Succeeded Lenin. Made the USSR a totalitarian state. Industrialised rapidly (Five-Year Plans) at massive human cost. Purged millions. Led the USSR through WWII and expanded into Eastern Europe, starting the Cold War."},
+  {cat:"Key Figures",q:"Who was Hitler and how did he rise to power?",a:"Exploited post-WWI resentment, the Great Depression, and fear of communism. Became Chancellor in 1933 through elections, then dismantled democracy. Launched WWII and the Holocaust."},
+  {cat:"Key Figures",q:"Who was Mussolini?",a:"Founded Fascism. Became Italy's dictator in 1922 ('Il Duce'). Allied with Hitler. Failed in WWII → removed 1943 → executed 1945."},
+  {cat:"Key Figures",q:"Who was Woodrow Wilson and what were the Fourteen Points?",a:"US president in WWI. Proposed a fair peace: self-determination, open diplomacy, and a League of Nations. Most ideas rejected at Versailles. The US Senate refused to join the League."},
+  {cat:"Key Figures",q:"Who was Mao Zedong?",a:"Led China's Communist Party to victory in 1949. Founded the People's Republic of China. His policies caused tens of millions of deaths. China joining the communist bloc expanded the Cold War to Asia."},
+  // ── Exam Skills ──
+  {cat:"Exam Skills",q:"How do you analyse a historical image?",a:"1. Describe what you see. 2. Identify the purpose (propaganda, protest, documentation). 3. Give historical context. 4. State the message/argument. 5. Evaluate bias or reliability."},
+  {cat:"Exam Skills",q:"How do you analyse a historical map?",a:"1. Read title, date, and legend. 2. Identify what's shown (borders, troop movements, empires). 3. Connect to historical events. 4. State its significance — what does it show about power or change?"},
+  {cat:"Exam Skills",q:"How do you analyse a historical text?",a:"1. Who wrote it and why? 2. When (context)? 3. What's the main argument? 4. What evidence does it use? 5. Is it biased? 6. How does it connect to the period?"},
+  {cat:"Exam Skills",q:"How do you write a strong long-response answer?",a:"Intro: clear thesis. Body: topic sentence + evidence + explanation per paragraph. Conclusion: restate thesis. Use dates, names, events. Address cause and consequence."},
+  {cat:"Exam Skills",q:"What was the War Guilt Clause and why did it matter?",a:"Article 231 of Versailles — forced Germany to accept full blame for WWI. Used to justify £6.6 billion reparations. Hitler used it to mobilise resentment against the Weimar Republic."},
+  {cat:"Exam Skills",q:"What is the domino theory?",a:"If one country falls to communism, its neighbours follow — like dominoes. It drove US intervention in Korea and Vietnam. Vietnam fell, but the full regional collapse didn't happen."},
+  {cat:"Exam Skills",q:"Compare Fascism and Communism as responses to post-WWI instability.",a:"Both rejected democracy, used terror and propaganda, and were authoritarian. Difference: Fascism is nationalist, supports class hierarchy. Communism is internationalist, eliminates class. Fascism partly arose as a reaction to the communist threat."},
+  {cat:"Exam Skills",q:"Why is WWI the starting point of the Age of Extremism?",a:"WWI discredited monarchies, killed millions, and created economic chaos. It directly caused the Russian Revolution (communism) and through Versailles created the conditions for fascism. Without WWI, the ideological battles of 1917–1991 wouldn't have happened."},
+];
+
+const HIST_MATCH_POOL=[
+  {id:0,  term:"Militarism",                  def:"The build-up of military forces and the glorification of military power."},
+  {id:1,  term:"Alliances",                   def:"Military pacts between nations that pulled all of Europe into WWI."},
+  {id:2,  term:"Imperialism",                 def:"Competition for colonies that increased European tensions before WWI."},
+  {id:3,  term:"Nationalism",                 def:"The belief that one's nation or ethnic group should be self-governing."},
+  {id:4,  term:"Treaty of Versailles",        def:"The 1919 peace treaty that blamed Germany for WWI and imposed harsh reparations."},
+  {id:5,  term:"War Guilt Clause",            def:"Article 231 — forced Germany to accept blame for WWI."},
+  {id:6,  term:"Reparations",                 def:"War damages Germany was forced to pay — £6.6 billion — after WWI."},
+  {id:7,  term:"League of Nations",           def:"Wilson's international peacekeeping body; weakened by US non-membership."},
+  {id:8,  term:"Bolsheviks",                  def:"Lenin's revolutionary communist party that seized power in Russia, October 1917."},
+  {id:9,  term:"Russian Revolution",          def:"The 1917 overthrow of the tsar and later the provisional government by Lenin."},
+  {id:10, term:"Communism",                   def:"Political ideology calling for collective ownership and a classless society."},
+  {id:11, term:"Fascism",                     def:"Far-right ideology centred on nationalism, dictatorship, and anti-communism."},
+  {id:12, term:"Great Depression",            def:"The global economic collapse triggered by the US stock market crash of 1929."},
+  {id:13, term:"Appeasement",                 def:"The policy of giving Hitler concessions to avoid war — ultimately failed."},
+  {id:14, term:"Trench warfare",              def:"The defensive style of fighting that created a stalemate on the Western Front."},
+  {id:15, term:"Propaganda",                  def:"Biased information used by governments to influence public opinion and support."},
+  {id:16, term:"Proxy war",                   def:"A conflict where superpowers support opposing sides without fighting directly."},
+  {id:17, term:"Containment",                 def:"US Cold War policy to stop the spread of communism beyond its current borders."},
+  {id:18, term:"Iron Curtain",                def:"Churchill's term for the division between communist Eastern and democratic Western Europe."},
+  {id:19, term:"MAD",                         def:"Mutually Assured Destruction — nuclear deterrence strategy meaning any attack destroys both sides."},
+  {id:20, term:"Détente",                     def:"A relaxation of Cold War tensions in the 1970s, including arms limitation treaties."},
+  {id:21, term:"Domino Theory",               def:"The belief that one country falling to communism would cause neighbours to follow."},
+  {id:22, term:"Marshall Plan",               def:"US economic aid to rebuild Western Europe and prevent the spread of communism."},
+  {id:23, term:"Berlin Wall",                 def:"Built in 1961 to divide Berlin; its fall in 1989 symbolised the end of the Cold War."},
+  {id:24, term:"Holocaust",                   def:"The Nazi genocide of six million Jews and millions of others during WWII."},
+  {id:25, term:"Truman Doctrine",             def:"US policy pledging support for nations threatened by communist takeover."},
+  {id:26, term:"Space Race",                  def:"US–USSR competition in space exploration as proof of ideological superiority."},
+  {id:27, term:"Arms Race",                   def:"The US–Soviet build-up of nuclear weapons, each trying to outnumber the other."},
+  {id:28, term:"Glasnost",                    def:"Gorbachev's policy of 'openness' — allowing more freedom of speech in the USSR."},
+  {id:29, term:"Perestroika",                 def:"Gorbachev's economic 'restructuring' reforms that inadvertently weakened the USSR."},
+  {id:30, term:"D-Day",                       def:"Allied invasion of Normandy on June 6, 1944, opening the Western Front."},
+  {id:31, term:"Cuban Missile Crisis",        def:"1962 standoff when USSR placed nuclear missiles in Cuba — closest moment to nuclear war."},
+  {id:32, term:"Anschluss",                   def:"Hitler's annexation of Austria in 1938, violating the Treaty of Versailles."},
+  {id:33, term:"Battle of Stalingrad",        def:"1942–43 turning point in WWII where Germany's advance in the East was stopped."},
+  {id:34, term:"Fourteen Points",             def:"Wilson's plan for a fair post-WWI peace — including self-determination and a League of Nations."},
+  {id:35, term:"Weimar Republic",             def:"Germany's democratic government 1919–1933, blamed for Versailles and the Depression."},
+];
+
+const HIST_FITB_BANK=[
+  {topic:"WWI Causes",sentence:"The four main causes of WWI are remembered as {{MAIN}}: Militarism, {{Alliances}}, Imperialism, and {{Nationalism}}.",answers:["MAIN","Alliances","Nationalism"],distractors:["PAIN","Treaties","Fascism","Democracy"]},
+  {topic:"WWI",sentence:"Trench warfare created a {{stalemate}} on the Western Front. New weapons like {{machine guns}} and barbed wire favoured {{defence}} over attack.",answers:["stalemate","machine guns","defence"],distractors:["advance","tanks","offence","retreat"]},
+  {topic:"Russian Revolution",sentence:"Lenin promised the Russian people '{{Peace}}, {{Land}}, {{Bread}}' to win popular support for the Bolshevik revolution.",answers:["Peace","Land","Bread"],distractors:["War","Money","Power","Justice"]},
+  {topic:"Russian Revolution",sentence:"Russia left WWI by signing the Treaty of {{Brest-Litovsk}} in 1918. This freed {{Germany}} to focus entirely on the {{Western Front}}.",answers:["Brest-Litovsk","Germany","Western Front"],distractors:["Versailles","France","Eastern Front","Paris"]},
+  {topic:"Treaty of Versailles",sentence:"The Treaty of Versailles forced Germany to accept the {{War Guilt Clause}}, pay £{{6.6}} billion in reparations, and limit its army to {{100,000}} soldiers.",answers:["War Guilt Clause","6.6","100,000"],distractors:["Peace Clause","10","5,000","200,000"]},
+  {topic:"Rise of Extremism",sentence:"Fascism rose in the {{1920s}} and {{1930s}} as a response to communism, the Great {{Depression}}, and post-war national humiliation.",answers:["1920s","1930s","Depression"],distractors:["1910s","1940s","Revolution","Inflation"]},
+  {topic:"WWII Causes",sentence:"Hitler was emboldened by the policy of {{appeasement}}. He remilitarised the {{Rhineland}}, annexed Austria ({{Anschluss}}), and took Czechoslovakia before invading Poland.",answers:["appeasement","Rhineland","Anschluss"],distractors:["containment","Sudetenland","Blitzkrieg","D-Day"]},
+  {topic:"WWII Turning Points",sentence:"Germany was defeated at {{Stalingrad}} in 1943, halting the Eastern advance. The D-Day landings at {{Normandy}} on June 6, {{1944}} opened the Western Front.",answers:["Stalingrad","Normandy","1944"],distractors:["Kursk","Dunkirk","1943","Paris"]},
+  {topic:"Cold War Origins",sentence:"The Cold War began because the {{US}} and {{USSR}} had opposing ideologies. The US pursued a policy of {{containment}} to stop communism spreading.",answers:["US","USSR","containment"],distractors:["UK","China","appeasement","deterrence"]},
+  {topic:"Cold War",sentence:"MAD stands for Mutually Assured {{Destruction}}. It meant neither superpower dared use nuclear weapons because both would be {{destroyed}}.",answers:["Destruction","destroyed"],distractors:["Deterrence","damaged","weakened","Defence"]},
+  {topic:"Cold War",sentence:"The {{Space Race}} and {{Arms Race}} were two key ways the Cold War was fought without direct military conflict between the US and USSR.",answers:["Space Race","Arms Race"],distractors:["Proxy War","Trade War","Information War","Culture War"]},
+  {topic:"End of the Cold War",sentence:"Gorbachev's reforms of {{glasnost}} (openness) and {{perestroika}} (restructuring) weakened Soviet control. The Berlin Wall fell on {{November 9, 1989}}.",answers:["glasnost","perestroika","November 9, 1989"],distractors:["communism","centralisation","October 1917","January 1991"]},
+];
+
+// ── HIST FLASHCARD STATE ──
+const HIST_CATS=["All",...[...new Set(HIST_ALL.map(c=>c.cat))]];
+let histActive="All",histDeck=[],histIdx=0,histFlipped=false;
+function histGetDeck(){return histActive==="All"?[...HIST_ALL]:HIST_ALL.filter(c=>c.cat===histActive);}
+function histShuffle(){histDeck.sort(()=>Math.random()-0.5);histIdx=0;histFlipped=false;document.getElementById("hist-card").classList.remove("flipped");histRender();}
+function histSetActive(cat){histActive=cat;histDeck=histGetDeck();histIdx=0;histFlipped=false;document.getElementById("hist-card").classList.remove("flipped");histRenderTabs();histRender();}
+function histFlip(){histFlipped=!histFlipped;document.getElementById("hist-card").classList.toggle("flipped",histFlipped);histRender();}
+function histGo(dir){const n=histIdx+dir;if(n<0||n>=histDeck.length)return;histIdx=n;histFlipped=false;document.getElementById("hist-card").classList.remove("flipped");histRender();}
+function histRenderTabs(){
+  document.getElementById("hist-tabs").innerHTML=HIST_CATS.map(c=>
+    `<button class="tab${c===histActive?" active":""}" onclick="histSetActive('${c.replace(/'/g,"\\'")}')"> ${c}</button>`
+  ).join("");
+}
+function histRender(){
+  const c=histDeck[histIdx];
+  document.getElementById("hist-q-text").textContent=c.q;
+  document.getElementById("hist-q-cat").textContent=c.cat;
+  document.getElementById("hist-a-text").textContent=c.a;
+  document.getElementById("hist-prog").textContent=`${histIdx+1} / ${histDeck.length}`;
+  document.getElementById("hist-prev-btn").disabled=histIdx===0;
+  document.getElementById("hist-next-btn").disabled=histIdx===histDeck.length-1;
+  document.getElementById("hist-dots").innerHTML=histDeck.map((_,i)=>
+    `<div class="dot${i<histIdx?" seen":i===histIdx?" current":""}" onclick="histJumpTo(${i})" title="Card ${i+1}"></div>`
+  ).join("");
+  document.getElementById("hist-done").classList.toggle("show",histIdx===histDeck.length-1&&histFlipped);
+}
+function histJumpTo(i){histIdx=i;histFlipped=false;document.getElementById("hist-card").classList.remove("flipped");histRender();}
+
+// ── HIST MODE SWITCHER ──
+function histSwitchMode(mode){
+  ['flash','match','fitb'].forEach(m=>{
+    document.getElementById('hist-screen-'+m).classList.toggle('visible',m===mode);
+    document.getElementById('hist-btn-'+m).classList.toggle('active',m===mode);
+  });
+  if(mode==='match'&&!histMatchInitialised)histNewMatchRound();
+  if(mode==='fitb'&&!histFitbInitialised)histNewFitbRound();
+}
+
+// ── HIST MATCH STATE ──
+const HIST_ROUND_SIZE=6;
+let histMatchInitialised=false,histMatchSelected=null,histMatchMatched=0,histMatchMistakes=0,histMatchPairs=[],histMatchLocked=false;
+function histNewMatchRound(){
+  histMatchInitialised=true;histMatchSelected=null;histMatchMatched=0;histMatchMistakes=0;histMatchLocked=false;
+  histMatchPairs=[...HIST_MATCH_POOL].sort(()=>Math.random()-0.5).slice(0,HIST_ROUND_SIZE);
+  document.getElementById("hist-match-complete").classList.remove("show");
+  document.getElementById("hist-match-score").textContent="0";
+  document.getElementById("hist-match-total").textContent=HIST_ROUND_SIZE;
+  document.getElementById("hist-match-mistakes").textContent="0";
+  const shuffledDefs=[...histMatchPairs].sort(()=>Math.random()-0.5);
+  document.getElementById("hist-match-terms").innerHTML=histMatchPairs.map(p=>`<div class="match-tile term" data-id="${p.id}" data-type="term" onclick="histMatchClick(this)">${p.term}</div>`).join("");
+  document.getElementById("hist-match-defs").innerHTML=shuffledDefs.map(p=>`<div class="match-tile" data-id="${p.id}" data-type="def" onclick="histMatchClick(this)">${p.def}</div>`).join("");
+}
+function histMatchClick(el){
+  if(histMatchLocked||el.classList.contains("matched"))return;
+  if(histMatchSelected===el){el.classList.remove("selected");histMatchSelected=null;return;}
+  if(histMatchSelected&&histMatchSelected.dataset.type===el.dataset.type){histMatchSelected.classList.remove("selected");histMatchSelected=el;el.classList.add("selected");return;}
+  if(!histMatchSelected){histMatchSelected=el;el.classList.add("selected");return;}
+  const a=histMatchSelected,b=el;a.classList.remove("selected");histMatchSelected=null;
+  if(a.dataset.id===b.dataset.id){
+    a.classList.add("matched","just-matched");b.classList.add("matched","just-matched");
+    setTimeout(()=>{a.classList.remove("just-matched");b.classList.remove("just-matched");},500);
+    histMatchMatched++;document.getElementById("hist-match-score").textContent=histMatchMatched;
+    if(histMatchMatched===HIST_ROUND_SIZE)setTimeout(()=>histShowMatchComplete(),500);
+  }else{
+    histMatchLocked=true;a.classList.add("wrong");b.classList.add("wrong");
+    histMatchMistakes++;document.getElementById("hist-match-mistakes").textContent=histMatchMistakes;
+    setTimeout(()=>{a.classList.remove("wrong");b.classList.remove("wrong");histMatchLocked=false;},600);
+  }
+}
+function histShowMatchComplete(){
+  const stars=histMatchMistakes===0?"🌟🌟🌟":histMatchMistakes<=2?"⭐⭐⭐":histMatchMistakes<=5?"⭐⭐":"⭐";
+  document.getElementById("hist-match-stars").textContent=stars;
+  document.getElementById("hist-match-result-text").textContent=`${HIST_ROUND_SIZE} / ${HIST_ROUND_SIZE} matched with ${histMatchMistakes} mistake${histMatchMistakes===1?"":"s"}.`;
+  document.getElementById("hist-match-complete").classList.add("show");
+}
+
+// ── HIST FITB STATE ──
+const HIST_FITB_ROUND_SIZE=10;
+let histFitbInitialised=false,histFitbRound=[],histFitbQIdx=0,histFitbCorrectCount=0,histFitbAnswered=false,histFitbResults=[],histFitbBlanks=[],histFitbLastFocused=null,histFitbChipFocus=-1;
+function histNewFitbRound(){
+  histFitbInitialised=true;
+  histFitbRound=[...HIST_FITB_BANK].sort(()=>Math.random()-0.5).slice(0,Math.min(HIST_FITB_ROUND_SIZE,HIST_FITB_BANK.length));
+  histFitbQIdx=0;histFitbCorrectCount=0;histFitbResults=new Array(histFitbRound.length).fill(null);
+  document.getElementById("hist-fitb-total").textContent=histFitbRound.length;
+  document.getElementById("hist-fitb-correct").textContent=0;
+  document.getElementById("hist-fitb-complete").classList.remove("show");
+  histLoadFitbQuestion();
+}
+function histRenderFitbPips(){
+  document.getElementById("hist-fitb-pips").innerHTML=histFitbRound.map((_,i)=>
+    `<div class="fitb-pip${histFitbResults[i]===true?" done-correct":histFitbResults[i]===false?" done-wrong":i===histFitbQIdx?" active":""}"></div>`
+  ).join("");
+}
+function histLoadFitbQuestion(){
+  histFitbAnswered=false;histFitbBlanks=[];histFitbLastFocused=null;histFitbChipFocus=-1;
+  document.getElementById("hist-fitb-next-btn").disabled=true;
+  document.getElementById("hist-fitb-hint-btn").disabled=false;
+  document.getElementById("hist-fitb-feedback").textContent="";
+  document.getElementById("hist-fitb-feedback").className="fitb-feedback";
+  document.getElementById("hist-fitb-complete").classList.remove("show");
+  document.getElementById("hist-fitb-idx").textContent=histFitbQIdx+1;
+  histRenderFitbPips();
+  const q=histFitbRound[histFitbQIdx];
+  document.getElementById("hist-fitb-topic").textContent=q.topic;
+  let html=q.sentence,blankIdx=0;
+  html=html.replace(/\{\{([^}]+)\}\}/g,(match,answer)=>{
+    const id=`hist-blank-${blankIdx++}`;
+    const w=Math.max(80,answer.length*11);
+    return`<input class="fitb-blank" id="${id}" data-answer="${answer.toLowerCase()}" style="min-width:${w}px" placeholder="…" autocomplete="off" spellcheck="false" oninput="histFitbTyping()" onkeydown="histFitbKeydown(event)">`;
+  });
+  document.getElementById("hist-fitb-sentence").innerHTML=html;
+  q.answers.forEach((_,i)=>{
+    const el=document.getElementById(`hist-blank-${i}`);
+    histFitbBlanks.push({el,answer:q.answers[i].toLowerCase(),filled:false});
+    el.addEventListener('focus',()=>{histFitbLastFocused=histFitbBlanks[i];});
+  });
+  const bankWords=[...q.answers,...q.distractors].sort(()=>Math.random()-0.5);
+  document.getElementById("hist-fitb-chips").innerHTML=bankWords.map(w=>
+    `<div class="fitb-chip" tabindex="0" data-word="${w}" onclick="histFitbChipClick(this)">${w}</div>`
+  ).join("");
+}
+function histSyncChipUsed(){
+  const usedWords=histFitbBlanks.map(b=>b.el.value.trim().toLowerCase()).filter(Boolean);
+  document.querySelectorAll('#hist-fitb-chips .fitb-chip').forEach(c=>{
+    const word=c.dataset.word.toLowerCase();
+    const usedCount=usedWords.filter(w=>w===word).length;
+    const chipIndex=[...document.querySelectorAll('#hist-fitb-chips .fitb-chip')].filter(x=>x.dataset.word.toLowerCase()===word).indexOf(c);
+    c.classList.toggle('used',chipIndex<usedCount);
+  });
+}
+function histFitbTyping(){
+  histSyncChipUsed();
+  const allFilled=histFitbBlanks.every(b=>b.el.value.trim()!=="");
+  if(allFilled&&!histFitbAnswered)histCheckFitb();
+}
+function histFitbKeydown(e){
+  if(e.key==="Enter"&&!histFitbAnswered)histCheckFitb();
+  if(e.key==="Tab"){
+    const blanks=histFitbBlanks.filter(b=>!b.el.disabled);
+    if(!blanks.length)return;
+    const cur=blanks.findIndex(b=>b===histFitbLastFocused);
+    const next=e.shiftKey?blanks[(cur-1+blanks.length)%blanks.length]:blanks[(cur+1)%blanks.length];
+    e.preventDefault();next.el.focus();
+  }
+}
+function histFitbChipClick(chip){
+  if(chip.classList.contains("used"))return;
+  const target=(histFitbLastFocused&&!histFitbLastFocused.el.disabled)?histFitbLastFocused:histFitbBlanks.find(b=>!b.el.disabled);
+  if(!target)return;
+  target.el.value=chip.dataset.word;
+  histFitbLastFocused=target;histFitbChipFocus=-1;
+  target.el.focus();histFitbTyping();
+}
+function histCheckFitb(){
+  if(histFitbAnswered)return;
+  histFitbAnswered=true;let allCorrect=true;
+  histFitbBlanks.forEach(b=>{
+    const val=b.el.value.trim().toLowerCase();
+    const correct=val===b.answer;
+    b.el.classList.add(correct?"correct":"wrong-ans");
+    b.el.disabled=true;
+    if(!correct){allCorrect=false;b.el.value=b.answer;}
+  });
+  histFitbResults[histFitbQIdx]=allCorrect;
+  if(allCorrect){
+    histFitbCorrectCount++;
+    document.getElementById("hist-fitb-correct").textContent=histFitbCorrectCount;
+    document.getElementById("hist-fitb-feedback").textContent="✓ Correct!";
+    document.getElementById("hist-fitb-feedback").className="fitb-feedback ok";
+  }else{
+    document.getElementById("hist-fitb-feedback").textContent="Not quite — correct answers shown above.";
+    document.getElementById("hist-fitb-feedback").className="fitb-feedback err";
+  }
+  document.getElementById("hist-fitb-next-btn").disabled=false;
+  document.getElementById("hist-fitb-hint-btn").disabled=true;
+  histRenderFitbPips();
+}
+function histFitbHint(){
+  histFitbBlanks.forEach(b=>{
+    if(!b.el.disabled&&b.el.value===""){b.el.value=b.answer[0].toUpperCase();b.el.focus();}
+  });
+  document.getElementById("hist-fitb-feedback").textContent="💡 First letters revealed!";
+  document.getElementById("hist-fitb-feedback").className="fitb-feedback";
+}
+function histFitbNext(){
+  histFitbQIdx++;
+  if(histFitbQIdx>=histFitbRound.length){histShowFitbComplete();return;}
+  histLoadFitbQuestion();
+}
+function histShowFitbComplete(){
+  histRenderFitbPips();
+  const pct=Math.round((histFitbCorrectCount/histFitbRound.length)*100);
+  const stars=pct===100?"🌟🌟🌟":pct>=70?"⭐⭐⭐":pct>=40?"⭐⭐":"⭐";
+  document.getElementById("hist-fitb-stars").textContent=stars;
+  document.getElementById("hist-fitb-result-text").textContent=`${histFitbCorrectCount} / ${histFitbRound.length} correct (${pct}%). ${pct===100?"Perfect!":pct>=70?"Well done!":"Keep studying!"}`;
+  document.getElementById("hist-fitb-complete").classList.add("show");
+}
+
+// ── HIST KEYBOARD ──
+document.addEventListener("keydown",e=>{
+  const histPageVisible=document.getElementById("page-hist").classList.contains("visible");
+  if(!histPageVisible)return;
+  if(document.getElementById("hist-screen-flash").classList.contains("visible")){
+    if(e.key==="ArrowRight"){e.preventDefault();histGo(1);}
+    else if(e.key==="ArrowLeft"){e.preventDefault();histGo(-1);}
+    else if(e.key===" "){e.preventDefault();histFlip();}
+  }
+  if(document.getElementById("hist-screen-fitb").classList.contains("visible")){
+    const inBlank=document.activeElement&&document.activeElement.classList.contains("fitb-blank");
+    if(inBlank)return;
+    if(e.key==="Enter"&&histFitbAnswered){e.preventDefault();histFitbNext();return;}
+    const chips=[...document.querySelectorAll('#hist-fitb-chips .fitb-chip:not(.used)')];
+    if(!chips.length)return;
+    if(e.key==="ArrowRight"||e.key==="ArrowLeft"){
+      e.preventDefault();
+      const cur=chips.findIndex(c=>c===document.activeElement);
+      let next;
+      if(e.key==="ArrowRight")next=chips[(cur+1)%chips.length];
+      else next=chips[(cur-1+chips.length)%chips.length];
+      next.focus();histFitbChipFocus=chips.indexOf(next);
+    }
+    if(e.key===" "&&document.activeElement&&document.activeElement.classList.contains("fitb-chip")){
+      e.preventDefault();histFitbChipClick(document.activeElement);
+    }
+  }
+});
+
+// ── HIST INIT ──
+(function initHist(){
+  histDeck=histGetDeck();
+  histRenderTabs();
+  histRender();
+  histNewMatchRound();
+  histNewFitbRound();
+})();
+</script>
 
 </body></html>
