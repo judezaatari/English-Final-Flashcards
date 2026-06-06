@@ -1116,6 +1116,12 @@
 
 <script>
 // ══════════════════════════════════════════════════════
+// ⚙️  SETUP — paste your Anthropic API key below
+// Get one at: https://console.anthropic.com/
+// ══════════════════════════════════════════════════════
+window.ANTHROPIC_API_KEY = 'YOUR_API_KEY_HERE';
+
+// ══════════════════════════════════════════════════════
 // PAGE NAVIGATION
 // ══════════════════════════════════════════════════════
 function resetMatchLobby(subj){
@@ -3254,9 +3260,16 @@ ${text?`\nExtra context: ${text.substring(0,1000)}`:''}`;
   }
 
   try{
+    const ANTHROPIC_API_KEY = window.ANTHROPIC_API_KEY || '';
+    if(!ANTHROPIC_API_KEY){throw new Error('No API key configured. Add your key to the top of the HTML file (see SETUP comment).');}
     const res=await fetch('https://api.anthropic.com/v1/messages',{
       method:'POST',
-      headers:{'Content-Type':'application/json'},
+      headers:{
+        'Content-Type':'application/json',
+        'x-api-key':ANTHROPIC_API_KEY,
+        'anthropic-version':'2023-06-01',
+        'anthropic-dangerous-direct-browser-access':'true'
+      },
       body:JSON.stringify({
         model:'claude-sonnet-4-20250514',
         max_tokens:2500,
